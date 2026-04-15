@@ -205,15 +205,29 @@ public class CenarioExecutor {
                     && acao.getLabel().toLowerCase().contains("nov")) {
                 continue;
             }
-            // Captura valor do campo chave para usar no alterar/excluir
-            if (acao.getCampo() != null && cenario.getCampo_chave() != null
-                    && acao.getCampo().equals(cenario.getCampo_chave())) {
-                valorChaveInserido = resolverValor(acao, "inserir", cenario.getDados_teste());
-                System.out.println("[INFO] Valor chave capturado da ação: " + valorChaveInserido);
-            }
             StepResult r = executarAcao("inserir", acao, cenario.getDados_teste());
             resultados.add(r);
-            
+
+            // Captura valorChaveInserido do resultado real da ação (garante que a busca usa
+            // exatamente o mesmo valor que foi gravado na tela, não uma estimativa prévia)
+            if (r.isPassou() && r.getMensagem() != null
+                    && acao.getCampo() != null && cenario.getCampo_chave() != null
+                    && acao.getCampo().equals(cenario.getCampo_chave())) {
+                String msg = r.getMensagem();
+                int idx = msg.indexOf(" = '");
+                if (idx >= 0) {
+                    int fim = msg.lastIndexOf("'");
+                    if (fim > idx + 4) {
+                        valorChaveInserido = msg.substring(idx + 4, fim);
+                        System.out.println("[INFO] Valor chave capturado do resultado real: " + valorChaveInserido);
+                    }
+                } else {
+                    // fallback: resolve pelo valor da ação
+                    valorChaveInserido = resolverValor(acao, "inserir", cenario.getDados_teste());
+                    System.out.println("[INFO] Valor chave capturado via resolverValor: " + valorChaveInserido);
+                }
+            }
+
             // Verificação ortográfica automática em cada passo
             verificarOrtografiaSilenciosa();
             
@@ -1054,7 +1068,8 @@ public class CenarioExecutor {
                             // Verifica primeiro os elementos de mensagem específicos do SEI/otm
                             // Prioriza componentes <otm:mensagem> que renderizam como .mensagem ou .otm-msg
                             for (String sel : new String[]{
-                                ".mensagem", ".mensagemDetalhada", ".tabMensagens", 
+                                ".rf-ntf-det",
+                                ".mensagem", ".mensagemDetalhada", ".tabMensagens",
                                 ".otm-msg-sucesso", ".otm-msg-erro", ".otm-msg-aviso",
                                 ".ui-growl-item", ".alert", ".msgs", "[id$=':msg']"
                             }) {

@@ -1,0 +1,207 @@
+{
+  "cenario_id" : "indice",
+  "cenario_descricao" : "indice",
+  "modulo" : "financeiro",
+  "data_inicio" : "08/04/2026 17:26:31",
+  "status_geral" : "ok",
+  "total_steps" : 28,
+  "steps_passou" : 28,
+  "steps_falhou" : 0,
+  "steps" : [ {
+    "hora" : "16:38:43",
+    "operacao" : "login",
+    "descricao" : "Login no SEI",
+    "passou" : true,
+    "mensagem" : "Login realizado",
+    "duracao_ms" : 8717
+  }, {
+    "hora" : "16:40:01",
+    "operacao" : "abrir_form",
+    "descricao" : "Abrir formulário de inclusão (clicar NOVO)",
+    "passou" : true,
+    "mensagem" : "Formulário aberto: http://localhost:8082/sei/visaoAdministrativo/financeiro/indiceReajusteForm.xhtml",
+    "duracao_ms" : 2828
+  }, {
+    "hora" : "16:40:04",
+    "operacao" : "inserir",
+    "descricao" : "inserir / clicar_aba 'Mês / Ano'",
+    "passou" : true,
+    "mensagem" : "AVISO: aba 'Mês / Ano' não encontrada, pulado",
+    "duracao_ms" : 12
+  }, {
+    "hora" : "16:42:34",
+    "operacao" : "inserir",
+    "descricao" : "inserir / preencher 'Motivo Cancelamento Reajuste Vencimento'",
+    "passou" : true,
+    "mensagem" : "AVISO: 'Motivo Cancelamento Reajuste Vencimento' não visível, pulado",
+    "duracao_ms" : 179
+  }, {
+    "hora" : "16:44:40",
+    "operacao" : "inserir",
+    "descricao" : "inserir / preencher 'Motivo Cancelamento'",
+    "passou" : true,
+    "mensagem" : "AVISO: 'Motivo Cancelamento' não visível, pulado",
+    "duracao_ms" : 178
+  }, {
+    "hora" : "16:46:46",
+    "operacao" : "inserir",
+    "descricao" : "inserir / selecionar 'Unidade Ensino V O'",
+    "passou" : true,
+    "mensagem" : "AVISO: 'Unidade Ensino V O' não encontrado, pulado",
+    "duracao_ms" : 859
+  }, {
+    "hora" : "16:48:55",
+    "operacao" : "inserir",
+    "descricao" : "inserir / selecionar 'Consulta Turma'",
+    "passou" : true,
+    "mensagem" : "AVISO: 'Consulta Turma' não encontrado, pulado",
+    "duracao_ms" : 794
+  }, {
+    "hora" : "16:51:03",
+    "operacao" : "inserir",
+    "descricao" : "inserir / preencher 'Valor Consultar Turma'",
+    "passou" : true,
+    "mensagem" : "AVISO: 'Valor Consultar Turma' não visível, pulado",
+    "duracao_ms" : 194
+  }, {
+    "hora" : "16:53:11",
+    "operacao" : "inserir",
+    "descricao" : "inserir / selecionar 'Consulta Curso'",
+    "passou" : true,
+    "mensagem" : "AVISO: 'Consulta Curso' não encontrado, pulado",
+    "duracao_ms" : 748
+  }, {
+    "hora" : "16:55:21",
+    "operacao" : "inserir",
+    "descricao" : "inserir / preencher 'Valor Consulta Curso'",
+    "passou" : true,
+    "mensagem" : "AVISO: 'Valor Consulta Curso' não visível, pulado",
+    "duracao_ms" : 225
+  }, {
+    "hora" : "16:57:28",
+    "operacao" : "inserir",
+    "descricao" : "inserir / preencher 'Descrição'",
+    "passou" : true,
+    "mensagem" : "Descrição = 'TESTE QA 18063'",
+    "duracao_ms" : 456
+  }, {
+    "hora" : "16:59:38",
+    "operacao" : "inserir",
+    "descricao" : "inserir / selecionar 'Mês Vencimento Conta'",
+    "passou" : true,
+    "mensagem" : "Mês Vencimento Conta = 'Janeiro'",
+    "duracao_ms" : 532
+  }, {
+    "hora" : "17:01:53",
+    "operacao" : "inserir",
+    "descricao" : "inserir / preencher 'Ano Vencimento Conta'",
+    "passou" : true,
+    "mensagem" : "Ano Vencimento Conta = '01/01/1990'",
+    "duracao_ms" : 950
+  }, {
+    "hora" : "17:04:23",
+    "operacao" : "inserir",
+    "descricao" : "inserir / preencher 'Percentual de Reajuste Aplicar Conta'",
+    "passou" : true,
+    "mensagem" : "Percentual de Reajuste Aplicar Conta = 'TESTE QA 18063'",
+    "duracao_ms" : 427
+  }, {
+    "hora" : "17:06:51",
+    "operacao" : "inserir",
+    "descricao" : "inserir / preencher 'CODIGO'",
+    "passou" : true,
+    "mensagem" : "CODIGO = '1'",
+    "duracao_ms" : 398
+  }, {
+    "hora" : "17:09:16",
+    "operacao" : "inserir",
+    "descricao" : "inserir / preencher 'MÊS'",
+    "passou" : true,
+    "mensagem" : "MÊS = '1'",
+    "duracao_ms" : 431
+  }, {
+    "hora" : "17:11:40",
+    "operacao" : "inserir",
+    "descricao" : "inserir / clicar 'Salvar'",
+    "passou" : true,
+    "mensagem" : "Clicou em 'GRAVAR' (confirmado)",
+    "duracao_ms" : 943
+  }, {
+    "hora" : "17:14:05",
+    "operacao" : "inserir_validacao",
+    "descricao" : "inserir / validação: mensagem_sucesso",
+    "passou" : true,
+    "mensagem" : "Mensagem de confirmação encontrada na tela.",
+    "duracao_ms" : 109
+  }, {
+    "hora" : "17:14:06",
+    "operacao" : "busca",
+    "descricao" : "Buscar registro 'TESTE QA 18063' na listagem",
+    "passou" : true,
+    "mensagem" : "Registro encontrado e aberto: 'TESTE QA 18063'",
+    "duracao_ms" : 2322
+  }, {
+    "hora" : "17:14:08",
+    "operacao" : "alterar",
+    "descricao" : "alterar / clicar_aba 'Mês / Ano'",
+    "passou" : true,
+    "mensagem" : "AVISO: aba 'Mês / Ano' não encontrada, pulado",
+    "duracao_ms" : 18
+  }, {
+    "hora" : "17:16:34",
+    "operacao" : "alterar",
+    "descricao" : "alterar / preencher 'Motivo Cancelamento'",
+    "passou" : true,
+    "mensagem" : "AVISO: 'Motivo Cancelamento' não visível, pulado",
+    "duracao_ms" : 195
+  }, {
+    "hora" : "17:18:55",
+    "operacao" : "alterar",
+    "descricao" : "alterar / preencher 'Valor Consultar Turma'",
+    "passou" : true,
+    "mensagem" : "AVISO: 'Valor Consultar Turma' não visível, pulado",
+    "duracao_ms" : 177
+  }, {
+    "hora" : "17:21:10",
+    "operacao" : "alterar",
+    "descricao" : "alterar / clicar 'Salvar'",
+    "passou" : true,
+    "mensagem" : "Clicou em 'GRAVAR' (confirmado)",
+    "duracao_ms" : 1609
+  }, {
+    "hora" : "17:23:34",
+    "operacao" : "alterar_validacao",
+    "descricao" : "alterar / validação: mensagem_sucesso",
+    "passou" : true,
+    "mensagem" : "Mensagem de confirmação encontrada na tela.",
+    "duracao_ms" : 112
+  }, {
+    "hora" : "17:23:34",
+    "operacao" : "busca",
+    "descricao" : "Buscar registro 'TESTE QA 18063' na listagem",
+    "passou" : true,
+    "mensagem" : "Registro encontrado e aberto: 'TESTE QA 18063'",
+    "duracao_ms" : 10813
+  }, {
+    "hora" : "17:23:45",
+    "operacao" : "alterar",
+    "descricao" : "alterar / clicar 'Excluir'",
+    "passou" : true,
+    "mensagem" : "Clicou em 'EXCLUIR' (sem confirmação visual)",
+    "duracao_ms" : 6202
+  }, {
+    "hora" : "17:25:06",
+    "operacao" : "alterar",
+    "descricao" : "alterar / confirmar_dialogo 'Confirmar exclusão'",
+    "passou" : true,
+    "mensagem" : "Confirmação processada",
+    "duracao_ms" : 12006
+  }, {
+    "hora" : "17:26:29",
+    "operacao" : "excluir_validacao",
+    "descricao" : "excluir / validação: mensagem_sucesso",
+    "passou" : true,
+    "mensagem" : "Mensagem de confirmação encontrada na tela.",
+    "duracao_ms" : 22
+  } ]
+}

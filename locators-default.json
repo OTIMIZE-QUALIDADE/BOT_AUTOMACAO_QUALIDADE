@@ -1,0 +1,14 @@
+{
+  "_comment": "Locators registry - updated automatically when SmartLocator heals a selector",
+  "login": {
+    "usuario": ["input[id*='usuario']", "#form:usuario", "input[name='usuario']"],
+    "senha": ["input[type='password']", "#form:senha", "input[name='senha']"],
+    "submit": ["input[type='submit']", "#form:btnEntrar", "button[type='submit']"]
+  },
+  "comum": {
+    "btnNovo": ["#form:btnNovo", "a[id*='btnNovo']", "button[id*='novo']", "input[value='Novo']"],
+    "btnSalvar": ["#form:btnSalvar", "input[value='Salvar']", "button[id*='salvar']", "input[type='submit']"],
+    "btnExcluir": ["#form:btnExcluir", "a[id*='btnExcluir']", "button[id*='excluir']", "input[value='Excluir']"],
+    "btnEditar": ["#form:btnEditar", "a[id*='btnEditar']", "button[id*='editar']", "input[value='Editar']"]
+  }
+}

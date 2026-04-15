@@ -1,0 +1,213 @@
+{
+  "id": "pais",
+  "descricao": "pais",
+  "modulo": "administrativo",
+  "tela": "visaoAdministrativo/administrativo/paizForm.xhtml",
+  "_gerado_automaticamente": true,
+  "operacoes_disponiveis": [
+    "inserir",
+    "alterar",
+    "excluir",
+    "ortografia"
+  ],
+  "campo_chave": "nome",
+  "dados_teste": {
+    "nome": "TESTE QA {{timestamp}}",
+    "nacionalidade": "TESTE QA {{timestamp}}",
+    "sigla_inep": "TESTE QA {{timestamp}}",
+    "cdigo_bacen": "TESTE QA {{timestamp}}"
+  },
+  "inserir": {
+    "acoes": [
+      {
+        "tipo": "clicar",
+        "label": "Novo",
+        "texto_botao": "NOVO",
+        "localizadores": [
+          "#form\\:novo\\:novo",
+          "a[id*='novo']",
+          "a.btn-info",
+          "//a[contains(normalize-space(.), 'NOVO')]",
+          "#form\\:btnNovo",
+          "a[id*='btnNovo']"
+        ]
+      },
+      {
+        "tipo": "clicar_aba",
+        "label": "CódigoNação",
+        "valor": "CódigoNação",
+        "localizadores": []
+      },
+      {
+        "tipo": "preencher",
+        "campo": "nome",
+        "label": "Nome",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "form:nome",
+        "localizadores": [
+          "#form\\:nome",
+          "input[id='form:nome']",
+          "input[id*='nome']",
+          "input[name='form:nome']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "nacionalidade",
+        "label": "Nacionalidade",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "form:nacionalidade",
+        "localizadores": [
+          "#form\\:nacionalidade",
+          "input[id='form:nacionalidade']",
+          "input[id*='nacionalidade']",
+          "input[name='form:nacionalidade']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "sigla_inep",
+        "label": "Sigla INEP",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "form:siglaInep",
+        "localizadores": [
+          "#form\\:siglaInep",
+          "input[id='form:siglaInep']",
+          "input[id*='siglaInep']",
+          "input[name='form:siglaInep']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "cdigo_bacen",
+        "label": "Código Bacen",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "form:codigoBacen",
+        "localizadores": [
+          "#form\\:codigoBacen",
+          "input[id='form:codigoBacen']",
+          "input[id*='codigoBacen']",
+          "input[name='form:codigoBacen']"
+        ]
+      },
+      {
+        "tipo": "clicar",
+        "label": "Salvar",
+        "texto_botao": "GRAVAR",
+        "localizadores": [
+          "#form\\:salvar\\:salvar",
+          "a[id*='salvar']",
+          "a.btn-dark",
+          "//a[contains(normalize-space(.), 'GRAVAR')]",
+          "a[id*='salvar']",
+          "button[id*='salvar']",
+          "a.btn-gravar",
+          "a[class*='btn-gravar']",
+          "#form\\:btnSalvar",
+          "input[value='Salvar']",
+          "input[value='GRAVAR']",
+          "input[type='submit']"
+        ]
+      }
+    ],
+    "validacoes": [
+      {
+        "tipo": "mensagem_sucesso",
+        "valor": "sucesso",
+        "_alternativas": "Ajuste para a mensagem real de sucesso do SEI (ex: 'salvo com sucesso', 'cadastrado')"
+      }
+    ]
+  },
+  "alterar": {
+    "acoes": [
+      {
+        "tipo": "clicar_aba",
+        "label": "CódigoNação",
+        "valor": "CódigoNação",
+        "localizadores": []
+      },
+      {
+        "tipo": "preencher",
+        "campo": "nome",
+        "label": "Nome",
+        "valor": "TESTE QA {{timestamp}}",
+        "valor_alterar": "TESTE QA {{timestamp}}",
+        "localizadores": [
+          "#form\\:nome",
+          "input[id='form:nome']",
+          "input[id*='nome']",
+          "input[name='form:nome']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "nacionalidade",
+        "label": "Nacionalidade",
+        "valor": "TESTE QA {{timestamp}}",
+        "valor_alterar": "TESTE QA {{timestamp}}",
+        "localizadores": [
+          "#form\\:nacionalidade",
+          "input[id='form:nacionalidade']",
+          "input[id*='nacionalidade']",
+          "input[name='form:nacionalidade']"
+        ]
+      },
+      {
+        "tipo": "clicar",
+        "label": "Salvar",
+        "texto_botao": "GRAVAR",
+        "localizadores": [
+          "#form\\:salvar\\:salvar",
+          "a[id*='salvar']",
+          "a.btn-dark",
+          "//a[contains(normalize-space(.), 'GRAVAR')]",
+          "a[id*='salvar']",
+          "button[id*='salvar']",
+          "a.btn-gravar",
+          "a[class*='btn-gravar']",
+          "#form\\:btnSalvar",
+          "input[value='Salvar']",
+          "input[value='GRAVAR']",
+          "input[type='submit']"
+        ]
+      }
+    ],
+    "validacoes": [
+      {
+        "tipo": "mensagem_sucesso",
+        "valor": "sucesso"
+      }
+    ]
+  },
+  "excluir": {
+    "acoes": [
+      {
+        "tipo": "clicar",
+        "label": "Excluir",
+        "texto_botao": "EXCLUIR",
+        "localizadores": [
+          "#form\\:excluir\\:excluir",
+          "a[id*='excluir']",
+          "a.btn-danger",
+          "//a[contains(normalize-space(.), 'EXCLUIR')]",
+          "#form\\:btnExcluir",
+          "a[id*='btnExcluir']",
+          "button[id*='excluir']",
+          "input[value='Excluir']"
+        ]
+      },
+      {
+        "tipo": "confirmar_dialogo",
+        "label": "Confirmar exclusão",
+        "localizadores": []
+      }
+    ],
+    "validacoes": [
+      {
+        "tipo": "mensagem_sucesso",
+        "valor": "excluído",
+        "_alternativas": "Ajuste para a mensagem real do SEI"
+      }
+    ]
+  }
+}

@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Otimize Qualidade — Automação de Testes SEI</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap');
+
+:root {
+  --bg:      #0d1117;
+  --bg2:     #161b22;
+  --bg3:     #1c2128;
+  --bg4:     #21262d;
+  --bd:      #30363d;
+  --bd2:     #3d444e;
+  --tx:      #e6edf3;
+  --tx2:     #9198a1;
+  --tx3:     #a0adb8;
+  --ph:      #8a9199;
+  --green:   #3fb950;
+  --green2:  #2ea043;
+  --blue:    #58a6ff;
+  --blue2:   #1f6feb;
+  --red:     #f85149;
+  --amber:   #d29922;
+  --amber-bd:#6e4c00;
+  --purple:  #bc8cff;
+  --orange:  #e3b341;
+  --r: 6px; --rl: 12px;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'Segoe UI', system-ui, sans-serif;
+  color-scheme: dark;
+}
+body.light {
+  --bg:      #ffffff;
+  --bg2:     #f6f8fa;
+  --bg3:     #eaeef2;
+  --bg4:     #d0d7de;
+  --bd:      #d0d7de;
+  --bd2:     #adb5bd;
+  --tx:      #1f2328;
+  --tx2:     #444c56;
+  --tx3:     #3e4750;
+  --ph:      #6e7781;
+  --green:   #1a7f37;
+  --green2:  #2da44e;
+  --blue:    #0969da;
+  --blue2:   #0550ae;
+  --red:     #cf222e;
+  --amber:   #9a6700;
+  --amber-bd:#d4a017;
+  --purple:  #6639ba;
+  --orange:  #953800;
+  color-scheme: light;
+}
+body.light .toast.ok   { background: rgba(26,127,55,.12);  border-color: rgba(26,127,55,.4);  color: var(--green); }
+body.light .toast.err  { background: rgba(207,34,46,.10);  border-color: rgba(207,34,46,.4);  color: var(--red); }
+body.light .toast.info { background: rgba(9,105,218,.10);  border-color: rgba(9,105,218,.4);  color: var(--blue); }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--tx); font-family: var(--sans); font-size: 13px; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+/* ── Topbar ── */
+.topbar {
+  height: 50px; flex-shrink: 0;
+  background: var(--bg2); border-bottom: 1px solid var(--bd);
+  display: flex; align-items: center; padding: 0 16px; gap: 10px;
+  z-index: 10;
+}
+.tb-logo { font-family: 'Syne', var(--sans); font-size: 15px; font-weight: 800; color: var(--tx); white-space: nowrap; }
+.tb-logo span { color: var(--green); }
+.tb-sep  { width: 1px; height: 20px; background: var(--bd); flex-shrink: 0; }
+.tb-sub  { font-size: 11px; color: var(--tx2); font-family: var(--mono); white-space: nowrap; }
+.tb-spacer { flex: 1; }
+.tb-info { display: flex; align-items: center; gap: 14px; font: 11px var(--mono); }
+.tb-dot  { width: 7px; height: 7px; border-radius: 50%; display: inline-block; margin-right: 4px; flex-shrink: 0; }
+.dot-ok  { background: var(--green); box-shadow: 0 0 5px var(--green); }
+.dot-err { background: var(--red);   box-shadow: 0 0 5px var(--red); }
+.dot-warn{ background: var(--amber); }
+
+/* ── Buttons ── */
+.btn {
+  padding: 7px 14px; border-radius: var(--r); border: none; font: 13px var(--sans); font-weight: 700;
+  cursor: pointer; transition: all .15s; display: inline-flex; align-items: center; gap: 6px;
+  white-space: nowrap;
+}
+.btn:disabled { opacity: .35; cursor: not-allowed !important; }
+.btn-primary { background: var(--green2); color: #0d1a11; }
+.btn-primary:hover:not(:disabled) { background: var(--green); }
+.btn-blue    { background: var(--blue2); color: #fff; }
+.btn-blue:hover:not(:disabled) { background: var(--blue); color: #0d1117; }
+.btn-ghost   { background: var(--bg3); color: var(--tx2); border: 1px solid var(--bd); }
+.btn-ghost:hover { border-color: var(--bd2); color: var(--tx); background: var(--bg4); }
+.btn-orange  { background: rgba(227,179,65,.15); color: var(--orange); border: 1px solid rgba(227,179,65,.35); }
+.btn-orange:hover { background: rgba(227,179,65,.25); }
+.btn-danger  { background: rgba(248,81,73,.1); color: var(--red); border: 1px solid rgba(248,81,73,.3); }
+.btn-danger:hover { background: rgba(248,81,73,.18); border-color: rgba(248,81,73,.5); }
+.btn-sm  { padding: 5px 10px; font-size: 12px; }
+.btn-xs  { padding: 4px 8px;  font-size: 11px; }
+
+/* ── Main layout ── */
+.main-area { flex: 1; display: flex; overflow: hidden; }
+
+/* ── Left panel ── */
+.panel-l {
+  width: 256px; flex-shrink: 0; background: var(--bg2);
+  border-right: 1px solid var(--bd); display: flex; flex-direction: column; overflow: hidden;
+}
+.panel-tabs { display: flex; flex-shrink: 0; background: var(--bg2); border-bottom: 1px solid var(--bd); }
+.p-tab {
+  flex: 1; padding: 8px 6px; background: none; border: none;
+  border-bottom: 2px solid transparent; color: var(--tx2);
+  font: 11px var(--sans); font-weight: 700; cursor: pointer;
+  transition: all .12s; white-space: nowrap; text-align: center;
+}
+.p-tab:hover { color: var(--tx); }
+.p-tab.on { color: var(--blue); border-bottom-color: var(--blue); }
+
+.panel-hd { padding: 10px 12px 8px; border-bottom: 1px solid var(--bd); flex-shrink: 0; }
+.panel-lbl { font-size: 9px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--tx3); margin-bottom: 6px; }
+
+.item-list { flex: 1; overflow-y: auto; }
+.grp-label { font-size: 9px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--tx3); padding: 8px 12px 4px; }
+
+.cenario-item {
+  padding: 9px 12px; cursor: pointer; border-bottom: 1px solid var(--bd);
+  transition: background .12s; position: relative; border-left: 3px solid transparent;
+}
+.cenario-item:hover { background: var(--bg3); }
+.cenario-item.on { background: var(--bg3); border-left-color: var(--green2); }
+.cenario-item .c-nome { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 22px; color: var(--tx); }
+.cenario-item .c-mod  { font-size: 10px; color: var(--blue); margin-top: 2px; font-family: var(--mono); }
+.cenario-item .c-ops  { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
+.cenario-item .c-del  {
+  position: absolute; top: 8px; right: 8px; background: none; border: none;
+  color: var(--red); font-size: 12px; cursor: pointer; opacity: 0; transition: opacity .15s;
+  padding: 2px 5px; border-radius: 3px; line-height: 1;
+}
+.cenario-item:hover .c-del { opacity: 0.55; }
+.cenario-item .c-del:hover { opacity: 1 !important; background: rgba(248,81,73,.12); }
+
+.panel-foot { padding: 10px 12px; border-top: 1px solid var(--bd); flex-shrink: 0; }
+
+/* ── Center panel ── */
+.panel-c { flex: 1; min-width: 0; display: flex; flex-direction: column; background: var(--bg); overflow: hidden; }
+
+.center-tabs { display: flex; flex-shrink: 0; background: var(--bg2); border-bottom: 1px solid var(--bd); }
+.c-tab {
+  padding: 12px 18px; font: 12px var(--sans); font-weight: 700; cursor: pointer;
+  color: var(--tx2); border-bottom: 2px solid transparent; transition: all .15s; white-space: nowrap;
+}
+.c-tab.on { color: var(--green); border-bottom-color: var(--green2); }
+.c-tab:hover { color: var(--tx); background: var(--bg3); }
+
+.tab-pane { display: none; flex: 1; overflow-y: auto; padding: 20px; }
+.tab-pane.on { display: block; }
+
+/* ── Right panel (log) ── */
+.panel-r {
+  width: 340px; flex-shrink: 0; background: var(--bg2);
+  border-left: 1px solid var(--bd); display: flex; flex-direction: column; overflow: hidden;
+}
+.log-hd {
+  padding: 0 14px; height: 42px; border-bottom: 1px solid var(--bd);
+  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+  font: 11px var(--sans); font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--tx2);
+}
+.log-body { flex: 1; overflow-y: auto; padding: 8px 10px; font-family: var(--mono); font-size: 11px; }
+.log-line { padding: 2px 4px; border-radius: 3px; margin-bottom: 1px; word-break: break-word; line-height: 1.5; }
+.ll-info    { color: var(--tx2); }
+.ll-success { color: var(--green); }
+.ll-error   { color: var(--red); }
+.ll-warn    { color: var(--amber); }
+.ll-scan    { color: var(--orange); }
+
+/* ── Cards ── */
+.card {
+  background: var(--bg2); border: 1px solid var(--bd); border-radius: var(--rl);
+  padding: 18px 20px; margin-bottom: 14px;
+}
+.card-title {
+  font-family: 'Syne', var(--sans); font-size: 13px; font-weight: 700;
+  color: var(--tx); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+}
+.card-title.scan { color: var(--orange); }
+.card-title.teal { color: var(--blue); }
+.card-title.grn  { color: var(--green); }
+
+/* ── Form fields ── */
+.fld { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+.fld label { font-size: 10px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--tx2); }
+.fld input, .fld select, .fld textarea {
+  background: var(--bg3); border: 1px solid var(--bd); border-radius: var(--r);
+  padding: 7px 10px; color: var(--tx); font: 12px var(--mono); outline: none;
+  transition: border-color .15s; height: 32px; width: 100%;
+}
+.fld textarea { height: auto; resize: vertical; }
+.fld input:focus, .fld select:focus, .fld textarea:focus { border-color: var(--blue); }
+.fld input::placeholder, .fld textarea::placeholder { color: var(--ph); }
+.fld .hint { font-size: 10px; color: var(--tx3); margin-top: 3px; }
+.fld .hint code { font-family: var(--mono); color: var(--green); }
+.frow { display: flex; gap: 12px; }
+.frow .fld { flex: 1; }
+
+/* ── Op badges ── */
+.op { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+.op-ins { background: rgba(63,185,80,.18); color: var(--green); border: 1px solid rgba(63,185,80,.35); }
+.op-alt { background: rgba(210,153,34,.18); color: var(--amber); border: 1px solid rgba(210,153,34,.35); }
+.op-exc { background: rgba(248,81,73,.15); color: var(--red);   border: 1px solid rgba(248,81,73,.3); }
+.op-ort { background: rgba(188,140,255,.15); color: var(--purple); border: 1px solid rgba(188,140,255,.3); }
+
+/* ── Badges ── */
+.badge { padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; }
+.badge-ok  { background: rgba(63,185,80,.15); color: var(--green); border: 1px solid rgba(63,185,80,.3); }
+.badge-err { background: rgba(248,81,73,.15); color: var(--red);   border: 1px solid rgba(248,81,73,.3); }
+.badge-run { background: rgba(88,166,255,.15); color: var(--blue); border: 1px solid rgba(88,166,255,.3); animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.45} }
+
+/* ── Ops checkbox row ── */
+.ops-row { display: flex; gap: 16px; flex-wrap: wrap; }
+.ops-row label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px; color: var(--tx); }
+.ops-row input[type=checkbox] { width: 14px; height: 14px; accent-color: var(--green2); cursor: pointer; }
+
+/* ── Rel list ── */
+.rel-row {
+  padding: 8px 12px; border-bottom: 1px solid var(--bd);
+  display: flex; align-items: center; gap: 8px; font-size: 11px; cursor: pointer;
+  transition: background .1s;
+}
+.rel-row:hover { background: var(--bg3); }
+.rel-row .rel-cenario { font-family: var(--mono); color: var(--blue); font-weight: 600; flex-shrink: 0; }
+.rel-row .rel-data { color: var(--tx2); flex: 1; }
+.rel-row .rel-pass { color: var(--green); }
+.rel-row .rel-fail { color: var(--red); }
+
+/* ── Sugestão de telas ── */
+.tela-pill {
+  padding: 4px 10px; border-radius: 20px; font: 11px var(--sans); font-weight: 700;
+  cursor: pointer; border: 1px solid var(--bd); background: var(--bg4); color: var(--tx2);
+  white-space: nowrap; transition: all .12s;
+}
+.tela-pill:hover { border-color: var(--bd2); color: var(--tx); background: var(--bg3); }
+
+/* ── Dados de teste table ── */
+.dt-table { width: 100%; border-collapse: collapse; }
+.dt-table thead tr { background: var(--bg3); }
+.dt-table th { padding: 7px 10px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--tx2); }
+.dt-table th.c-ins { color: var(--green); }
+.dt-table th.c-alt { color: var(--amber); }
+.dt-table td { padding: 6px 10px; font-size: 12px; border-bottom: 1px solid var(--bd); }
+.dt-table tr:hover td { background: rgba(88,166,255,.04); }
+.dt-table .sel-hint { font-size: 9px; color: var(--blue); margin-left: 4px; }
+.dt-inp {
+  width: 100%; background: var(--bg); border: 1px solid var(--bd); border-radius: var(--r);
+  color: var(--tx); padding: 5px 8px; font: 12px var(--mono); outline: none; transition: border .15s;
+}
+.dt-inp:focus { border-color: var(--blue); }
+
+/* ── Docs ── */
+.doc-section { margin-bottom: 22px; }
+.doc-h2 { font-family: 'Syne', var(--sans); font-size: 14px; font-weight: 800; color: var(--tx); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--bd); display: flex; align-items: center; gap: 8px; }
+.doc-h3 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--tx2); margin: 14px 0 6px; }
+.doc-p  { font-size: 12px; color: var(--tx2); line-height: 1.75; margin-bottom: 8px; }
+.doc-p strong { color: var(--tx); }
+.doc-p code   { font-family: var(--mono); font-size: 11px; color: var(--green); background: var(--bg3); padding: 1px 5px; border-radius: 3px; border: 1px solid var(--bd); }
+.doc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.doc-card { background: var(--bg2); border: 1px solid var(--bd); border-radius: var(--r); padding: 12px 14px; }
+.doc-card-title { font-size: 12px; font-weight: 700; color: var(--tx); margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }
+.doc-card-body  { font-size: 11px; color: var(--tx2); line-height: 1.65; }
+.doc-step { display: flex; gap: 10px; margin-bottom: 8px; align-items: flex-start; }
+.doc-step-num { width: 22px; height: 22px; border-radius: 50%; background: var(--bg3); border: 1px solid var(--bd); font-size: 10px; font-weight: 700; color: var(--blue); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.doc-step-body { flex: 1; font-size: 12px; color: var(--tx2); line-height: 1.65; }
+.doc-step-body strong { color: var(--tx); }
+.doc-step-body code   { font-family: var(--mono); font-size: 11px; color: var(--orange); }
+.doc-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 8px; }
+.doc-table th { text-align: left; padding: 6px 10px; background: var(--bg3); color: var(--tx2); font-size: 10px; text-transform: uppercase; letter-spacing: .5px; }
+.doc-table td { padding: 6px 10px; border-bottom: 1px solid var(--bd); color: var(--tx2); vertical-align: top; line-height: 1.6; }
+.doc-table td:first-child { font-family: var(--mono); color: var(--green); font-size: 11px; white-space: nowrap; }
+.doc-table tr:hover td { background: rgba(88,166,255,.04); }
+.flow-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.flow-box { background: var(--bg3); border: 1px solid var(--bd); border-radius: var(--r); padding: 6px 12px; font-size: 11px; color: var(--tx); white-space: nowrap; }
+.flow-arrow { color: var(--tx3); font-size: 14px; }
+.tag-green { background: rgba(63,185,80,.15);  color: var(--green); border: 1px solid rgba(63,185,80,.3);  border-radius: 3px; padding: 1px 6px; font-size: 10px; font-weight: 700; }
+.tag-blue  { background: rgba(88,166,255,.15); color: var(--blue);  border: 1px solid rgba(88,166,255,.3); border-radius: 3px; padding: 1px 6px; font-size: 10px; font-weight: 700; }
+.tag-amber { background: rgba(210,153,34,.15); color: var(--amber); border: 1px solid rgba(210,153,34,.3); border-radius: 3px; padding: 1px 6px; font-size: 10px; font-weight: 700; }
+.tag-red   { background: rgba(248,81,73,.12);  color: var(--red);   border: 1px solid rgba(248,81,73,.3);  border-radius: 3px; padding: 1px 6px; font-size: 10px; font-weight: 700; }
+
+/* ── Info box / divider ── */
+.info-box {
+  background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.25);
+  border-radius: var(--r); padding: 10px 14px; margin-bottom: 14px; font-size: 12px; color: var(--tx2);
+}
+.info-box strong { color: var(--blue); }
+.divider { border: none; border-top: 1px solid var(--bd); margin: 14px 0; }
+
+/* ── Empty state ── */
+.empty { text-align: center; color: var(--tx2); padding: 30px 16px; font-size: 12px; line-height: 1.7; }
+.empty-ico { font-size: 28px; opacity: .35; margin-bottom: 8px; }
+
+/* ── Spinner ── */
+.spin { width: 12px; height: 12px; border: 2px solid rgba(255,255,255,.2); border-top-color: currentColor; border-radius: 50%; animation: spinr .6s linear infinite; display: inline-block; flex-shrink: 0; }
+@keyframes spinr { to { transform: rotate(360deg); } }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--bd2); border-radius: 2px; }
+
+/* ── Toast ── */
+.toast-wrap { position: fixed; bottom: 20px; right: 20px; z-index: 300; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+.toast {
+  padding: 10px 16px; border-radius: var(--r); font: 13px var(--sans); font-weight: 600;
+  min-width: 240px; max-width: 360px; display: flex; align-items: center; gap: 8px;
+  animation: slideIn .22s ease; pointer-events: auto; border: 1px solid transparent;
+}
+@keyframes slideIn { from { transform: translateX(36px); opacity: 0; } to { transform: none; opacity: 1; } }
+.toast.ok   { background: rgba(63,185,80,.15);  border-color: var(--green2); color: var(--green); }
+.toast.err  { background: rgba(248,81,73,.15);  border-color: rgba(248,81,73,.5); color: var(--red); }
+.toast.info { background: rgba(88,166,255,.15); border-color: var(--blue2);  color: var(--blue); }
+
+/* ── Modal ── */
+.modal-ov { position: fixed; inset: 0; background: rgba(0,0,0,.75); z-index: 200; display: none; align-items: center; justify-content: center; }
+.modal-ov.open { display: flex; }
+.modal-box { background: var(--bg2); border: 1px solid var(--bd); border-radius: var(--rl); padding: 24px 28px; min-width: 480px; max-width: 680px; max-height: 82vh; overflow-y: auto; }
+.modal-title { font-family: 'Syne', var(--sans); font-size: 15px; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.modal-stats { display: flex; gap: 10px; margin-bottom: 16px; }
+.stat-box { flex: 1; background: var(--bg3); border: 1px solid var(--bd); border-radius: var(--r); padding: 12px; text-align: center; }
+.stat-num { font-size: 22px; font-weight: 800; font-family: var(--mono); color: var(--tx); }
+.stat-lbl { font-size: 10px; color: var(--tx2); margin-top: 2px; text-transform: uppercase; }
+.stat-box.s-ok  { border-color: rgba(63,185,80,.4); }
+.stat-box.s-ok  .stat-num { color: var(--green); }
+.stat-box.s-err { border-color: rgba(248,81,73,.4); }
+.stat-box.s-err .stat-num { color: var(--red); }
+.step-list { font: 11px var(--mono); }
+.step-row { display: flex; align-items: flex-start; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--bd); }
+.step-ico { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+.step-info { flex: 1; min-width: 0; }
+.step-op { display: inline-block; padding: 1px 5px; border-radius: 3px; font-size: 9px; font-weight: 700; text-transform: uppercase; margin-right: 4px; }
+.step-err-msg { color: var(--red); font-size: 10px; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<!-- ── Topbar ─────────────────────────────────────────────────────────────── -->
+<div class="topbar">
+  <div class="tb-logo">Otimize <span>Qualidade</span></div>
+  <div class="tb-sep"></div>
+  <div class="tb-sub">Automação de Testes SEI</div>
+  <div class="tb-sep"></div>
+  <div class="tb-info">
+    <span><span class="tb-dot" id="dotJava"></span>Java</span>
+    <span><span class="tb-dot" id="dotBot"></span>Bot</span>
+    <span id="qtdCenarios" style="color:var(--tx2)">0 cenários</span>
+  </div>
+  <div class="tb-spacer"></div>
+  <button class="btn btn-ghost btn-sm" onclick="recompilar()" style="color:var(--amber);border-color:var(--amber-bd)">🔄 Recompilar</button>
+  <button class="btn btn-ghost btn-sm" id="btnTema" onclick="toggleTema()" title="Alternar tema" style="font-size:15px;padding:4px 9px">🌙</button>
+</div>
+
+<!-- ── Main ─────────────────────────────────────────────────────────────────── -->
+<div class="main-area">
+
+  <!-- ════ LEFT PANEL ════ -->
+  <div class="panel-l">
+    <div class="panel-tabs">
+      <button class="p-tab on" id="ptabCenarios" onclick="leftTab('cenarios')">Cenários</button>
+      <button class="p-tab"    id="ptabModulos"  onclick="leftTab('modulos')">Módulos SEI</button>
+    </div>
+
+    <!-- Cenários -->
+    <div id="tabCenarios" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;">
+      <div class="item-list" id="listaCenarios">
+        <div class="empty">Carregando...</div>
+      </div>
+    </div>
+
+    <!-- Módulos SEI -->
+    <div id="tabModulos" style="flex:1;overflow-y:auto;display:none;">
+      <div id="listaModulos"></div>
+    </div>
+
+    <div class="panel-foot">
+      <button class="btn btn-orange" style="width:100%;justify-content:center;" onclick="showScanTab()">
+        🔍 Escanear Nova Tela
+      </button>
+    </div>
+  </div>
+
+  <!-- ════ CENTER PANEL ════ -->
+  <div class="panel-c">
+
+    <!-- Credentials bar -->
+    <div id="credBar" style="display:none;background:var(--bg2);border-bottom:1px solid var(--bd);padding:7px 18px;display:none;align-items:center;gap:10px;flex-shrink:0;font-size:11px;">
+      <span style="color:var(--tx2)">🔒 Conectado como</span>
+      <span id="credUser" style="color:var(--green);font-weight:700;font-family:var(--mono)"></span>
+      <span style="color:var(--tx2)">em</span>
+      <span id="credUrl"  style="color:var(--tx2);font-family:var(--mono)"></span>
+      <button class="btn btn-ghost btn-xs" style="margin-left:auto" onclick="editarCredenciais()">Editar</button>
+    </div>
+
+    <div class="center-tabs">
+      <div class="c-tab on" id="ctabExec" onclick="centerTab('exec')">▶ Executar</div>
+      <div class="c-tab"    id="ctabScan" onclick="centerTab('scan')">🔍 Escanear</div>
+      <div class="c-tab"    id="ctabRel"  onclick="centerTab('rel')">📋 Relatórios</div>
+      <div class="c-tab"    id="ctabDocs" onclick="centerTab('docs')">📖 Documentação</div>
+    </div>
+
+    <!-- ── TAB EXECUTAR ── -->
+    <div class="tab-pane on" id="paneExec">
+      <div id="semCenario" style="text-align:center;padding:60px 20px 30px;">
+        <div class="empty-ico">🤖</div>
+        <div style="font-size:14px;font-weight:700;color:var(--tx2);margin-bottom:8px;">Selecione um cenário</div>
+        <div style="font-size:12px;color:var(--tx3);">Escolha um cenário na lista à esquerda ou use <strong style="color:var(--orange)">Escanear Nova Tela</strong> para criar um.</div>
+      </div>
+
+      <div id="configPanel" style="display:none">
+        <!-- Credenciais -->
+        <div class="card" id="cardCredenciais">
+          <div class="card-title">🔑 Credenciais SEI</div>
+          <div class="fld">
+            <label>URL base do SEI</label>
+            <input type="url" id="seiUrl" placeholder="https://sei.suainstituicao.edu.br/" oninput="sincronizarCredenciais()" />
+            <div class="hint">Endereço completo do SEI, com <code>https://</code> e barra no final. O bot abre esta URL no Chrome para fazer login.</div>
+          </div>
+          <div class="frow">
+            <div class="fld">
+              <label>Usuário</label>
+              <input type="text" id="usuario" placeholder="usuario.sei" oninput="sincronizarCredenciais()" />
+              <div class="hint">Login de acesso ao SEI (mesmo usado no navegador).</div>
+            </div>
+            <div class="fld">
+              <label>Senha</label>
+              <input type="password" id="senha" placeholder="••••••••" oninput="sincronizarCredenciais()" />
+              <div class="hint">Senha do usuário. Usada apenas localmente pelo bot Selenium.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cenário -->
+        <div class="card">
+          <div class="card-title" id="cenarioNome">Cenário</div>
+          <div class="fld">
+            <label>Operações a executar</label>
+            <div class="ops-row">
+              <label><input type="checkbox" id="opInserir" checked> <span class="op op-ins">Inserir</span></label>
+              <label><input type="checkbox" id="opAlterar" checked> <span class="op op-alt">Alterar</span></label>
+              <label><input type="checkbox" id="opExcluir" checked> <span class="op op-exc">Excluir</span></label>
+              <label><input type="checkbox" id="opOrtografia" checked> <span class="op op-ort">Ortografia</span></label>
+            </div>
+            <div class="hint" style="margin-top:6px">
+              <strong style="color:var(--green)">Inserir</strong> — abre o formulário, preenche os campos e salva um novo registro.<br>
+              <strong style="color:var(--amber)">Alterar</strong> — busca o registro criado pelo campo-chave, abre e edita.<br>
+              <strong style="color:var(--red)">Excluir</strong> — busca o registro e remove com confirmação de diálogo.<br>
+              <strong style="color:var(--purple)">Ortografia</strong> — analisa todo o texto visível na tela em busca de erros gramaticais ou ortográficos.<br>
+              Execute apenas <strong>Inserir</strong> para testar somente o cadastro sem apagar.
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;">
+            <button class="btn btn-primary" id="btnExecutar" onclick="executarCenario()">▶ Executar Teste</button>
+            <button class="btn btn-ghost" onclick="toggleEditarDados()" id="btnEditarDados">✏️ Editar Dados</button>
+          </div>
+        </div>
+
+        <!-- Editar dados de teste -->
+        <div class="card" id="cardEditarDados" style="display:none;border-color:rgba(88,166,255,.4);">
+          <div class="card-title teal">✏️ Dados de Teste</div>
+          <p style="font-size:11px;color:var(--tx2);margin-bottom:12px;">
+            <strong style="color:var(--green)">Inserir</strong> = valor para criar.
+            <strong style="color:var(--amber)">Alterar</strong> = valor após editar.
+          </p>
+          <div id="dadosTesteFormExec"></div>
+          <div class="fld" style="margin-top:10px;max-width:340px;">
+            <label>🔑 Campo chave (busca no alterar/excluir)</label>
+            <select id="selectCampoChaveExec"></select>
+            <div class="hint">O bot usa o valor deste campo para localizar o registro na tela de listagem antes de alterar ou excluir. Ex: se for "Nome", o bot vai digitar o nome cadastrado na busca.</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;margin-top:10px;">
+            <button class="btn btn-primary btn-sm" onclick="salvarDadosTesteExec()">💾 Salvar</button>
+            <span id="dadosSalvoMsgExec" style="font-size:11px;color:var(--green);display:none;">✅ Salvo!</span>
+          </div>
+        </div>
+
+        <!-- Histórico do cenário -->
+        <div class="card">
+          <div class="card-title">📋 Histórico deste Cenário</div>
+          <div id="listaRelatoriosCenario"><div class="empty" style="padding:10px">Nenhum relatório ainda.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB ESCANEAR ── -->
+    <div class="tab-pane" id="paneScan">
+      <div class="info-box">
+        <strong>🔍 Scanner Universal</strong> — Aponte para qualquer tela do SEI e o bot vai analisar
+        automaticamente todos os campos, labels e botões, gerando um cenário pronto para usar.
+        Funciona com qualquer módulo: Acadêmico, Financeiro, RH, Protocolo…
+      </div>
+
+      <div class="card">
+        <div class="card-title scan">🎯 Configurar Escaneamento</div>
+
+        <div class="fld">
+          <label>URL base do SEI</label>
+          <input type="url" id="scanSeiUrl" placeholder="https://sei.suainstituicao.edu.br/" />
+          <div class="hint">Endereço raiz do SEI. O bot vai fazer login aqui antes de navegar para a tela escolhida.</div>
+        </div>
+        <div class="frow">
+          <div class="fld">
+            <label>Usuário</label>
+            <input type="text" id="scanUsuario" placeholder="usuario.sei" />
+            <div class="hint">Login do SEI para autenticação.</div>
+          </div>
+          <div class="fld">
+            <label>Senha</label>
+            <input type="password" id="scanSenha" placeholder="••••••••" />
+            <div class="hint">Senha usada apenas localmente.</div>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="fld">
+          <label>URL relativa da tela a escanear</label>
+          <input type="text" id="scanTela" placeholder="visaoAdministrativo/academico/alunoCons.xhtml" />
+          <div class="hint">
+            Apenas o caminho após a URL base — a tela de <strong>listagem</strong> (Cons), não o formulário.<br>
+            Para descobrir: abra a tela no SEI, copie a URL da barra de endereço e remova a parte da URL base.<br>
+            Ex: <code>visaoAdministrativo/rh/funcionarioCons.xhtml</code>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="fld">
+            <label>Nome do cenário (ID único)</label>
+            <input type="text" id="scanId" placeholder="crud-funcionario" />
+            <div class="hint">Identificador sem espaços. O arquivo será salvo como <code>{id}.json</code> em <code>cenarios/</code>. Se deixar em branco, será gerado a partir da URL.</div>
+          </div>
+          <div class="fld">
+            <label>Módulo</label>
+            <input type="text" id="scanModulo" placeholder="RH" />
+            <div class="hint">Grupo para organizar o cenário na lista lateral. Ex: Acadêmico, Financeiro, RH.</div>
+          </div>
+        </div>
+        <div class="fld">
+          <label>Descrição</label>
+          <input type="text" id="scanDescricao" placeholder="CRUD Completo - Cadastro de Funcionário" />
+          <div class="hint">Nome legível que aparece na lista de cenários e nos relatórios.</div>
+        </div>
+        <div class="fld">
+          <label>Nomes das Abas (separados por vírgula — deixe vazio para auto-detectar)</label>
+          <input type="text" id="scanAbas" placeholder="Dados Básicos,Documentação,Turnos,Matriz Curricular" />
+          <div class="hint">
+            Se o scanner não detectar as abas automaticamente, informe os nomes exatos aqui.<br>
+            Ex: <code>Aba 1,Aba 2,Aba 3</code>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:4px;">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--tx)">
+            <input type="checkbox" id="scanHeadless" style="width:14px;height:14px;accent-color:var(--green2)">
+            Rodar sem janela (headless)
+          </label>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:12px;">
+          <button class="btn btn-orange" id="btnScan" onclick="escanearTela()">🔍 Escanear Tela</button>
+          <span style="font-size:11px;color:var(--tx2);">O Chrome abrirá automaticamente para análise</span>
+        </div>
+      </div>
+
+      <div id="scanResultado" style="display:none">
+        <div class="card" style="border-color:rgba(63,185,80,.35);">
+          <div class="card-title grn">📝 Preencher Dados de Teste</div>
+          <p style="font-size:11px;color:var(--tx2);margin-bottom:12px;">
+            O robô vai <strong style="color:var(--green)">inserir</strong> com a coluna "Valor" e
+            <strong style="color:var(--amber)">alterar</strong> com "Novo Valor".
+          </p>
+          <div id="dadosTesteForm" style="margin-bottom:14px;">
+            <div class="empty" style="padding:10px">Carregando campos detectados...</div>
+          </div>
+          <div class="fld" style="max-width:340px;margin-bottom:14px;">
+            <label>🔑 Campo chave — usado para localizar o registro</label>
+            <select id="selectCampoChave"><option value="">— Selecione —</option></select>
+            <div class="hint">
+              Após inserir, o bot precisa encontrar o registro para editá-lo e excluí-lo.<br>
+              Ele faz isso digitando o <strong>valor deste campo</strong> na caixa de busca da tela de listagem.<br>
+              Escolha um campo único, como "Nome" ou "Código". Evite campos genéricos como "Status".
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+            <button class="btn btn-ghost btn-sm" id="btnSalvarDados" onclick="salvarDadosTeste()">💾 Salvar Dados</button>
+            <button class="btn btn-primary btn-sm" id="btnUsarCenario" onclick="salvarEExecutar()">▶ Salvar e Executar</button>
+            <span id="dadosSalvoMsg" style="font-size:11px;color:var(--green);display:none;">✅ Dados salvos!</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Telas comuns -->
+      <div class="card" style="margin-top:4px">
+        <div class="card-title">📦 Telas Comuns do SEI</div>
+        <div style="font-size:11px;color:var(--tx2);margin-bottom:10px;">Clique para preencher automaticamente a URL:</div>
+        <div id="telasSugeridas" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+      </div>
+    </div>
+
+    <!-- ── TAB RELATÓRIOS ── -->
+    <div class="tab-pane" id="paneRel">
+      <div class="card">
+        <div class="card-title">📋 Todos os Relatórios</div>
+        <div id="todosRelatorios"><div class="empty">Carregando...</div></div>
+      </div>
+    </div>
+
+    <!-- ── TAB DOCUMENTAÇÃO ── -->
+    <div class="tab-pane" id="paneDocs">
+
+      <!-- Visão geral -->
+      <div class="doc-section">
+        <div class="doc-h2">🤖 O que é o Otimize Qualidade?</div>
+        <div class="doc-p">
+          Ferramenta de <strong>automação de testes funcionais CRUD</strong> para o sistema SEI.<br>
+          Abre o Google Chrome automaticamente, faz login no SEI, navega até a tela escolhida e executa
+          <strong>Inserir → Alterar → Excluir</strong> como um usuário real — verificando se cada operação foi concluída com sucesso.
+        </div>
+        <div class="doc-grid">
+          <div class="doc-card">
+            <div class="doc-card-title">🔍 Escanear Tela</div>
+            <div class="doc-card-body">Você aponta a URL de uma tela do SEI. O bot abre o Chrome, analisa todos os campos, labels e botões e gera automaticamente um arquivo de cenário JSON pronto para usar. Não precisa programar nada.</div>
+          </div>
+          <div class="doc-card">
+            <div class="doc-card-title">▶ Executar Cenário</div>
+            <div class="doc-card-body">O bot lê o cenário JSON, abre o Chrome, faz login e executa inserir → alterar → excluir. Cada etapa é registrada com resultado (passou/falhou), duração e screenshot em caso de erro.</div>
+          </div>
+          <div class="doc-card">
+            <div class="doc-card-title">📋 Relatórios</div>
+            <div class="doc-card-body">Ao final de cada execução são gerados dois arquivos: um JSON estruturado e um HTML visual com tabela de etapas, badges coloridos por operação e screenshots expansíveis.</div>
+          </div>
+          <div class="doc-card">
+            <div class="doc-card-title">🧠 SmartLocator</div>
+            <div class="doc-card-body">O bot usa 7 estratégias em cascata para encontrar campos na tela (CSS, XPath, label, placeholder, aria-label, texto do botão, classe CSS). Se a tela mudar, ele se adapta automaticamente.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fluxo de uso -->
+      <div class="doc-section">
+        <div class="doc-h2">🚦 Fluxo de uso passo a passo</div>
+        <div class="doc-h3">Primeira vez com uma nova tela</div>
+        <div class="doc-step"><div class="doc-step-num">1</div><div class="doc-step-body"><strong>Aba Escanear</strong> — preencha a URL do SEI, usuário, senha e a URL relativa da tela (ex: <code>visaoAdministrativo/academico/cursoCons.xhtml</code>). Dê um ID e descrição ao cenário.</div></div>
+        <div class="doc-step"><div class="doc-step-num">2</div><div class="doc-step-body"><strong>Clique "Escanear Tela"</strong> — o Chrome abre, o bot faz login, navega para a tela, clica em "Novo", detecta todos os campos e gera o JSON. O Chrome fecha automaticamente.</div></div>
+        <div class="doc-step"><div class="doc-step-num">3</div><div class="doc-step-body"><strong>Preencha os Dados de Teste</strong> — aparece uma tabela com todos os campos detectados. Coluna <span class="tag-green">Valor (Inserir)</span> = o que vai ser cadastrado. Coluna <span class="tag-amber">Novo Valor (Alterar)</span> = o que vai ser alterado.</div></div>
+        <div class="doc-step"><div class="doc-step-num">4</div><div class="doc-step-body"><strong>Escolha o Campo Chave</strong> — campo único pelo qual o bot vai localizar o registro para alterar/excluir. Ex: "Nome" ou "Código".</div></div>
+        <div class="doc-step"><div class="doc-step-num">5</div><div class="doc-step-body"><strong>Salvar e Executar</strong> — o cenário é salvo e o teste começa. Acompanhe o Log de Execução no painel direito em tempo real.</div></div>
+
+        <div class="doc-h3">Reutilizar um cenário já criado</div>
+        <div class="doc-step"><div class="doc-step-num">1</div><div class="doc-step-body">Clique no cenário na <strong>lista à esquerda</strong>.</div></div>
+        <div class="doc-step"><div class="doc-step-num">2</div><div class="doc-step-body">Preencha as <strong>Credenciais SEI</strong> (URL, usuário, senha).</div></div>
+        <div class="doc-step"><div class="doc-step-num">3</div><div class="doc-step-body">Selecione as <strong>Operações</strong> e clique <strong>▶ Executar Teste</strong>. Use <strong>✏️ Editar Dados</strong> para ajustar os valores antes de rodar.</div></div>
+      </div>
+
+      <!-- O que o bot faz internamente -->
+      <div class="doc-section">
+        <div class="doc-h2">⚙️ O que o bot faz em cada operação</div>
+        <div class="doc-h3"><span class="tag-green">Inserir</span></div>
+        <div class="flow-row">
+          <div class="flow-box">Navega para tela Cons</div><div class="flow-arrow">→</div>
+          <div class="flow-box">Clica "Novo"</div><div class="flow-arrow">→</div>
+          <div class="flow-box">Aguarda formulário abrir</div><div class="flow-arrow">→</div>
+          <div class="flow-box">Preenche campos</div><div class="flow-arrow">→</div>
+          <div class="flow-box">Clica Salvar/Gravar</div><div class="flow-arrow">→</div>
+          <div class="flow-box">Verifica mensagem de sucesso</div>
+        </div>
+        <div class="doc-h3"><span class="tag-amber">Alterar</span></div>
+        <div class="flow-row">
+          <div class="flow-box">Navega para tela Cons</div><div class="flow-arrow">→</div>
+          <div class="flow-box">Digita valor no campo de busca</div><div class="flow-arrow">→</div>
+          <div class="flow-box">Clica no 1º resultado</div><div class="flow-arrow">→</div>
+          <div class="flow-box">Preenche novos valores</div><div class="flow-arrow">→</div>
+          <div class="flow-box">Clica Salvar</div><div class="flow-arrow">→</div>
+          <div class="flow-box">Verifica sucesso</div>
+        </div>
+        <div class="doc-h3"><span class="tag-red">Excluir</span></div>
+        <div class="flow-row">
+          <div class="flow-box">Navega para tela Cons</div><div class="flow-arrow">→</div>
+          <div class="flow-box">Busca registro pelo campo chave</div><div class="flow-arrow">→</div>
+          <div class="flow-box">Abre o registro</div><div class="flow-arrow">→</div>
+          <div class="flow-box">Clica Excluir</div><div class="flow-arrow">→</div>
+          <div class="flow-box">Confirma diálogo</div><div class="flow-arrow">→</div>
+          <div class="flow-box">Verifica sucesso</div>
+        </div>
+        <div class="doc-p" style="margin-top:8px">
+          O bot usa o valor <code>{{timestamp}}</code> nos campos de texto para garantir um nome único a cada execução
+          (ex: "Curso Teste Bot 12345"). Isso evita conflitos com registros já existentes e garante que o
+          alterar/excluir encontrem exatamente o registro criado naquela execução.
+        </div>
+      </div>
+
+      <!-- Cenário JSON -->
+      <div class="doc-section">
+        <div class="doc-h2">📄 Estrutura do Cenário JSON</div>
+        <div class="doc-p">Cada cenário é um arquivo <code>.json</code> salvo em <code>cenarios/</code>. Pode ser editado manualmente a qualquer momento.</div>
+        <table class="doc-table">
+          <thead><tr><th>Campo</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td>id</td><td>Identificador único do cenário, sem espaços. Nome do arquivo JSON.</td></tr>
+            <tr><td>descricao</td><td>Nome legível exibido na lista e nos relatórios.</td></tr>
+            <tr><td>modulo</td><td>Grupo para organizar cenários (Acadêmico, RH, Financeiro…).</td></tr>
+            <tr><td>tela</td><td>URL relativa da tela de listagem (Cons). Ponto de partida de todas as operações.</td></tr>
+            <tr><td>tela_form</td><td>URL do formulário quando "Novo" redireciona para outra página. Preenchido automaticamente pelo scanner.</td></tr>
+            <tr><td>campo_chave</td><td>Campo usado para buscar o registro na tela de listagem durante alterar/excluir.</td></tr>
+            <tr><td>operacoes_disponiveis</td><td>Lista das operações que o cenário suporta: <code>inserir</code>, <code>alterar</code>, <code>excluir</code>.</td></tr>
+            <tr><td>inserir / alterar / excluir</td><td>Objeto com lista de <code>acoes</code> (o que fazer) e <code>validacoes</code> (como verificar sucesso).</td></tr>
+            <tr><td>dados_teste</td><td>Mapa de valores customizados. Preenchido via interface ao escanear.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="doc-h3">Tipos de ação</div>
+        <table class="doc-table">
+          <thead><tr><th>tipo</th><th>O que faz</th></tr></thead>
+          <tbody>
+            <tr><td>preencher</td><td>Digita texto em um campo input ou textarea.</td></tr>
+            <tr><td>selecionar</td><td>Escolhe uma opção em um campo &lt;select&gt; (dropdown).</td></tr>
+            <tr><td>clicar</td><td>Clica em um botão ou link (Salvar, Gravar, Novo…).</td></tr>
+            <tr><td>limpar</td><td>Apaga o conteúdo de um campo antes de preencher.</td></tr>
+            <tr><td>buscar</td><td>Digita no campo de pesquisa da listagem e pressiona Enter.</td></tr>
+            <tr><td>confirmar_dialogo</td><td>Confirma um alert/confirm JavaScript ou modal de confirmação.</td></tr>
+            <tr><td>clicar_aba</td><td>Clica em uma aba do formulário (rich:tabPanel ou Bootstrap tabs).</td></tr>
+          </tbody>
+        </table>
+
+        <div class="doc-h3">Tipos de validação</div>
+        <table class="doc-table">
+          <thead><tr><th>tipo</th><th>O que verifica</th></tr></thead>
+          <tbody>
+            <tr><td>mensagem_sucesso</td><td>Procura um texto de sucesso na página (ex: "sucesso", "gravado com sucesso").</td></tr>
+            <tr><td>elemento_presente</td><td>Verifica se um elemento existe na página após a ação.</td></tr>
+            <tr><td>elemento_ausente</td><td>Verifica que um elemento NÃO existe (ex: o registro sumiu da lista após excluir).</td></tr>
+            <tr><td>texto_contem</td><td>Verifica se a página contém determinado texto.</td></tr>
+            <tr><td>url_contem</td><td>Verifica se a URL atual contém determinado trecho.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Arquitetura técnica -->
+      <div class="doc-section">
+        <div class="doc-h2">🏗️ Arquitetura e Tecnologias</div>
+        <div class="doc-grid">
+          <div class="doc-card">
+            <div class="doc-card-title">🐍 servidor.py — Python</div>
+            <div class="doc-card-body">
+              Servidor HTTP leve (<code>http.server</code>) na porta <strong>9871</strong>. Recebe requisições do frontend, lança o bot Java como subprocess e transmite o log em tempo real via <strong>SSE (Server-Sent Events)</strong>. Compila o bot com Maven automaticamente se o JAR não existir.
+            </div>
+          </div>
+          <div class="doc-card">
+            <div class="doc-card-title">☕ bot-qualidade — Java 21</div>
+            <div class="doc-card-body">
+              Fat JAR gerado pelo Maven. Dois modos: <code>-m scan</code> (escaneia tela) e <code>-m executar</code> (roda cenário). Usa <strong>Selenium 4.20</strong> + <strong>WebDriverManager</strong> (baixa o ChromeDriver automaticamente). JSON via <strong>Jackson 2.17</strong>.
+            </div>
+          </div>
+          <div class="doc-card">
+            <div class="doc-card-title">🗂️ Arquivos gerados</div>
+            <div class="doc-card-body">
+              <code>cenarios/{id}.json</code> — cenário de teste<br>
+              <code>relatorios/relatorio-{id}.json</code> — resultado estruturado<br>
+              <code>relatorios/relatorio-{id}.html</code> — dashboard visual<br>
+              <code>locators.json</code> — seletores customizados
+            </div>
+          </div>
+          <div class="doc-card">
+            <div class="doc-card-title">🔍 SmartLocator — 7 estratégias</div>
+            <div class="doc-card-body">
+              1. Seletores CSS/XPath do cenário<br>
+              2. Texto do &lt;label&gt; (case-insensitive)<br>
+              3. Atributo <code>placeholder</code><br>
+              4. Atributo <code>name</code> / <code>id</code> parcial<br>
+              5. Atributo <code>aria-label</code><br>
+              6. Texto do botão (com aliases)<br>
+              7. Classe CSS do botão (btn-gravar, btn-excluir…)
+            </div>
+          </div>
+        </div>
+
+        <div class="doc-h3">Pré-requisitos</div>
+        <table class="doc-table">
+          <thead><tr><th>Requisito</th><th>Observação</th></tr></thead>
+          <tbody>
+            <tr><td>Python 3.9+</td><td>Deve estar no PATH. Necessário para rodar servidor.py.</td></tr>
+            <tr><td>Java 21</td><td>Baixado automaticamente pelo INICIAR.bat em <code>runtime/jdk/</code>. Não precisa instalar.</td></tr>
+            <tr><td>Maven 3</td><td>Baixado automaticamente em <code>runtime/maven/</code>. Não precisa instalar.</td></tr>
+            <tr><td>Google Chrome</td><td>Deve estar instalado. O ChromeDriver é baixado automaticamente pelo WebDriverManager.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Dicas e solução de problemas -->
+      <div class="doc-section">
+        <div class="doc-h2">💡 Dicas e solução de problemas</div>
+        <table class="doc-table">
+          <thead><tr><th>Situação</th><th>O que fazer</th></tr></thead>
+          <tbody>
+            <tr><td>Bot não inicia</td><td>Clique <strong>🔄 Recompilar</strong> na topbar. O botão <span class="tag-blue">Bot</span> ficará verde após compilação bem-sucedida.</td></tr>
+            <tr><td>Login falhou</td><td>Verifique URL, usuário e senha. A URL deve terminar com <code>/</code>. Teste abrindo o SEI manualmente no Chrome.</td></tr>
+            <tr><td>Campo não encontrado</td><td>O log mostrará os labels e botões visíveis na tela. Use essas informações para ajustar o campo <code>label</code> no JSON do cenário, ou re-escanear a tela.</td></tr>
+            <tr><td>Alterar/Excluir não acha o registro</td><td>Verifique se o <strong>Campo Chave</strong> está correto. O valor digitado na busca deve aparecer na tela de listagem. Use o botão <strong>✏️ Editar Dados</strong> para ajustar.</td></tr>
+            <tr><td>Tela com abas (rich:tabPanel)</td><td>O scanner detecta abas automaticamente. Se falhar, re-escanear costuma resolver.</td></tr>
+            <tr><td>Formulário não abre ao clicar Novo</td><td>Alguns SEIs usam JavaScript para abrir o form. O bot tenta 3 estratégias (click(), navegação direta, jsClick). Se falhar, informe a URL do formulário manualmente em <code>tela_form</code> no JSON.</td></tr>
+            <tr><td>Cenário com muitas falhas</td><td>Execute só o <span class="tag-green">Inserir</span> primeiro. Se passar, adicione Alterar. Isso facilita identificar em qual operação está o problema.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div><!-- /paneDocs -->
+
+  </div><!-- /panel-c -->
+
+  <!-- ════ RIGHT PANEL (LOG) ════ -->
+  <div class="panel-r">
+    <div class="log-hd">
+      Log de Execução
+      <span id="statusExec" class="badge" style="display:none;margin-left:4px;"></span>
+      <button class="btn btn-ghost btn-xs" style="margin-left:auto" onclick="limparLog()">Limpar</button>
+    </div>
+    <div class="log-body" id="logPanel">
+      <div class="log-line ll-info">Aguardando execução…</div>
+    </div>
+  </div>
+
+</div><!-- /main-area -->
+
+<!-- ── Modal relatório ── -->
+<div class="modal-ov" id="modalRel" onclick="if(event.target===this)fecharModal()">
+  <div class="modal-box">
+    <div class="modal-title" id="mRelTitulo">Relatório</div>
+    <div class="modal-stats" id="mRelStats"></div>
+    <div class="step-list" id="mRelSteps"></div>
+    <div style="margin-top:16px;display:flex;gap:8px;">
+      <button class="btn btn-blue btn-sm" id="mRelBtnHtml" onclick="">Abrir relatório HTML ↗</button>
+      <button class="btn btn-ghost btn-sm" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Toasts ── -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+let cenarioAtivo = null;
+let execId = null;
+let sseSource = null;
+let cenarioGeradoId = null;
+let editarDadosAberto = false;
+
+// ── Telas comuns do SEI ─────────────────────────────────────────────────────
+const TELAS_COMUNS = [
+  { label:'Aluno',            tela:'visaoAdministrativo/academico/alunoCons.xhtml',                modulo:'Acadêmico',   id:'crud-aluno' },
+  { label:'Curso',            tela:'visaoAdministrativo/academico/cursoCons.xhtml',                modulo:'Acadêmico',   id:'crud-curso' },
+  { label:'Turma',            tela:'visaoAdministrativo/academico/turmaCons.xhtml',                modulo:'Acadêmico',   id:'crud-turma' },
+  { label:'Disciplina',       tela:'visaoAdministrativo/academico/disciplinaCons.xhtml',           modulo:'Acadêmico',   id:'crud-disciplina' },
+  { label:'Matriz Curricular',tela:'visaoAdministrativo/academico/matrizCurricularCons.xhtml',     modulo:'Acadêmico',   id:'crud-matriz' },
+  { label:'Turno',            tela:'visaoAdministrativo/academico/turnoCons.xhtml',                modulo:'Acadêmico',   id:'crud-turno' },
+  { label:'Matrícula',        tela:'visaoAdministrativo/academico/matriculaCons.xhtml',            modulo:'Acadêmico',   id:'crud-matricula' },
+  { label:'Período Letivo',   tela:'visaoAdministrativo/academico/periodoLetivoCons.xhtml',        modulo:'Acadêmico',   id:'crud-periodo-letivo' },
+  { label:'Processo Matrícula',tela:'visaoAdministrativo/academico/processoMatriculaCons.xhtml',   modulo:'Acadêmico',   id:'crud-processo-matricula' },
+  { label:'Plano Financeiro', tela:'visaoAdministrativo/financeiro/planoFinanceiroCons.xhtml',     modulo:'Financeiro',  id:'crud-plano-financeiro' },
+  { label:'Cond. Pagamento',  tela:'visaoAdministrativo/financeiro/condicaoPagamentoCons.xhtml',   modulo:'Financeiro',  id:'crud-condicao-pagamento' },
+  { label:'Mensalidade',      tela:'visaoAdministrativo/financeiro/mensalidadeCons.xhtml',         modulo:'Financeiro',  id:'crud-mensalidade' },
+  { label:'Funcionário',      tela:'visaoAdministrativo/rh/funcionarioCons.xhtml',                 modulo:'RH',          id:'crud-funcionario' },
+  { label:'Cargo',            tela:'visaoAdministrativo/rh/cargoCons.xhtml',                       modulo:'RH',          id:'crud-cargo' },
+  { label:'Departamento',     tela:'visaoAdministrativo/rh/departamentoCons.xhtml',               modulo:'RH',          id:'crud-departamento' },
+  { label:'Usuário',          tela:'visaoAdministrativo/geral/usuarioCons.xhtml',                  modulo:'Admin',       id:'crud-usuario' },
+  { label:'Perfil',           tela:'visaoAdministrativo/geral/perfilCons.xhtml',                   modulo:'Admin',       id:'crud-perfil' },
+];
+
+// ── Init ───────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  carregarStatus();
+  carregarCenarios();
+  carregarTelasSugeridas();
+  carregarModulosSEI();
+  setInterval(carregarStatus, 10000);
+  // Tema salvo
+  if (localStorage.getItem('tema') === 'light') aplicarTema('light');
+  // Pré-seleção via URL
+  const p = new URLSearchParams(location.search);
+  if (p.get('cenario')) window._preselect = p.get('cenario');
+});
+
+// ── Tema ───────────────────────────────────────────────────────────────────
+function toggleTema() {
+  const isLight = document.body.classList.toggle('light');
+  document.getElementById('btnTema').textContent = isLight ? '☀️' : '🌙';
+  localStorage.setItem('tema', isLight ? 'light' : 'dark');
+}
+function aplicarTema(t) {
+  if (t === 'light') { document.body.classList.add('light'); document.getElementById('btnTema').textContent = '☀️'; }
+}
+
+// ── Toast ──────────────────────────────────────────────────────────────────
+function toast(msg, tipo = 'info', dur = 4000) {
+  const wrap = document.getElementById('toastWrap');
+  const el = document.createElement('div');
+  el.className = 'toast ' + tipo;
+  el.textContent = msg;
+  wrap.appendChild(el);
+  setTimeout(() => el.style.opacity = '0', dur - 400);
+  setTimeout(() => el.remove(), dur);
+}
+
+// ── Status ─────────────────────────────────────────────────────────────────
+async function carregarStatus() {
+  try {
+    const d = await fetch('/api/status').then(r => r.json());
+    document.getElementById('dotJava').className     = 'tb-dot ' + (d.java_ok       ? 'dot-ok' : 'dot-err');
+    document.getElementById('dotBot').className      = 'tb-dot ' + (d.bot_compilado ? 'dot-ok' : 'dot-warn');
+    document.getElementById('qtdCenarios').textContent = d.cenarios + ' cenários';
+  } catch(e) {}
+}
+
+// ── Cenários ───────────────────────────────────────────────────────────────
+async function carregarCenarios() {
+  try {
+    const lista = await fetch('/api/cenarios').then(r => r.json());
+    const el = document.getElementById('listaCenarios');
+
+    if (!lista.length) {
+      el.innerHTML = '<div class="empty">Nenhum cenário.<br><small>Use "Escanear Nova Tela" para criar.</small></div>';
+      return;
+    }
+
+    const grupos = {};
+    lista.forEach(c => { const m = c.modulo || 'Geral'; if (!grupos[m]) grupos[m] = []; grupos[m].push(c); });
+
+    let html = '';
+    for (const [mod, cs] of Object.entries(grupos)) {
+      html += `<div class="grp-label">${mod}</div>`;
+      cs.forEach(c => {
+        const ops = (c.operacoes || []).map(o => `<span class="op op-${o.substring(0,3)}">${o}</span>`).join('');
+        html += `<div class="cenario-item" onclick="selecionarCenario(${escJson(c)})" data-id="${c.id}">
+          <div class="c-nome">${c.descricao}</div>
+          <div class="c-mod">${c.modulo || ''}</div>
+          <div class="c-ops">${ops}</div>
+          <button class="c-del" onclick="excluirCenario(event,'${c.id}','${c.descricao.replace(/'/g,"\\'")}')">✕</button>
+        </div>`;
+      });
+    }
+    el.innerHTML = html;
+
+    if (window._preselect) {
+      const t = lista.find(c => c.id === window._preselect);
+      if (t) { selecionarCenario(t); window._preselect = null; }
+    }
+  } catch(e) { console.error(e); }
+}
+
+function escJson(obj) { return JSON.stringify(obj).replace(/"/g, '&quot;'); }
+
+async function excluirCenario(event, id, nome) {
+  event.stopPropagation();
+  if (!confirm(`Excluir o cenário "${nome}"?\nEsta ação não pode ser desfeita.`)) return;
+  try {
+    const d = await fetch(`/api/cenarios/${encodeURIComponent(id)}`, { method:'DELETE' }).then(r => r.json());
+    if (d.ok) {
+      if (cenarioAtivo?.id === id) {
+        cenarioAtivo = null;
+        document.getElementById('semCenario').style.display = 'block';
+        document.getElementById('configPanel').style.display = 'none';
+      }
+      await carregarCenarios();
+      toast('Cenário excluído.', 'ok');
+    } else {
+      toast('Erro ao excluir: ' + (d.erro || 'desconhecido'), 'err');
+    }
+  } catch(e) { toast('Erro ao excluir cenário.', 'err'); }
+}
+
+function selecionarCenario(c) {
+  cenarioAtivo = c;
+  document.querySelectorAll('.cenario-item').forEach(el => el.classList.remove('on'));
+  document.querySelector(`.cenario-item[data-id="${c.id}"]`)?.classList.add('on');
+  document.getElementById('semCenario').style.display = 'none';
+  document.getElementById('configPanel').style.display = 'block';
+  document.getElementById('cenarioNome').textContent = c.descricao;
+  document.getElementById('cardEditarDados').style.display = 'none';
+  editarDadosAberto = false;
+  centerTab('exec');
+  carregarRelatoriosCenario(c.id);
+}
+
+async function carregarRelatoriosCenario(cenarioId) {
+  try {
+    const reps = await fetch('/api/relatorios').then(r => r.json());
+    const meus = reps.filter(r => r.cenario === cenarioId);
+    const el = document.getElementById('listaRelatoriosCenario');
+    if (!meus.length) { el.innerHTML = '<div class="empty" style="padding:10px">Nenhum relatório ainda.</div>'; return; }
+    el.innerHTML = meus.slice(0, 8).map(r => `
+      <div class="rel-row" onclick="verRelatorio('${r.id}')">
+        <span class="rel-data">${r.data}</span>
+        <span class="badge badge-${r.status==='ok'?'ok':'err'}">${r.status}</span>
+        <span class="rel-pass">${r.passou}✓</span>
+        <span class="rel-fail">${r.falhou}✗</span>
+      </div>`).join('');
+  } catch(e) {}
+}
+
+// ── Credenciais ────────────────────────────────────────────────────────────
+function sincronizarCredenciais() {
+  const url  = document.getElementById('seiUrl').value;
+  const user = document.getElementById('usuario').value;
+  const pass = document.getElementById('senha').value;
+  if (url)  document.getElementById('scanSeiUrl').value  = url;
+  if (user) document.getElementById('scanUsuario').value = user;
+  if (pass) document.getElementById('scanSenha').value   = pass;
+}
+function editarCredenciais() { document.getElementById('cardCredenciais').style.display = 'block'; }
+
+// ── Executar cenário ───────────────────────────────────────────────────────
+async function executarCenario() {
+  if (!cenarioAtivo) return;
+  const url  = document.getElementById('seiUrl').value.trim();
+  const user = document.getElementById('usuario').value.trim();
+  const pass = document.getElementById('senha').value;
+  if (!url || !user || !pass) { toast('Preencha URL, usuário e senha do SEI.', 'err'); return; }
+
+  const ops = [];
+  if (document.getElementById('opInserir').checked) ops.push('inserir');
+  if (document.getElementById('opAlterar').checked) ops.push('alterar');
+  if (document.getElementById('opExcluir').checked) ops.push('excluir');
+  if (document.getElementById('opOrtografia').checked) ops.push('ortografia');
+  if (!ops.length) { toast('Selecione ao menos uma operação.', 'err'); return; }
+
+  document.getElementById('btnExecutar').disabled = true;
+  setStatusExec('executando', 'run');
+  if (sseSource) sseSource.close();
+  document.getElementById('logPanel').innerHTML = '';
+
+  const d = await fetch('/api/rodar-cenario', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ cenarioId: cenarioAtivo.id, seiUrl: url, usuario: user, senha: pass, operacoes: ops })
+  }).then(r => r.json());
+  execId = d.exec_id;
+
+  iniciarSSE(execId, () => {
+    document.getElementById('btnExecutar').disabled = false;
+    carregarCenarios();
+    carregarRelatoriosCenario(cenarioAtivo.id);
+  });
+}
+
+// ── Escanear tela ──────────────────────────────────────────────────────────
+function showScanTab() {
+  const url  = document.getElementById('seiUrl').value;
+  const user = document.getElementById('usuario').value;
+  const pass = document.getElementById('senha').value;
+  if (url)  document.getElementById('scanSeiUrl').value  = url;
+  if (user) document.getElementById('scanUsuario').value = user;
+  if (pass) document.getElementById('scanSenha').value   = pass;
+  centerTab('scan');
+}
+
+async function escanearTela() {
+  const seiUrl   = document.getElementById('scanSeiUrl').value.trim();
+  const usuario  = document.getElementById('scanUsuario').value.trim();
+  const senha    = document.getElementById('scanSenha').value;
+  const telaUrl  = document.getElementById('scanTela').value.trim();
+  const cenarioId= document.getElementById('scanId').value.trim();
+  const descricao= document.getElementById('scanDescricao').value.trim() || 'Cenário gerado automaticamente';
+  const modulo   = document.getElementById('scanModulo').value.trim() || 'Geral';
+  const headless = document.getElementById('scanHeadless').checked;
+  const abas     = document.getElementById('scanAbas').value.trim();
+
+  if (!seiUrl || !usuario || !senha) { toast('Preencha URL, usuário e senha do SEI.', 'err'); return; }
+  if (!telaUrl) { toast('Informe a URL relativa da tela a escanear.', 'err'); return; }
+
+  document.getElementById('btnScan').disabled = true;
+  document.getElementById('scanResultado').style.display = 'none';
+  setStatusExec('escaneando', 'run');
+  if (sseSource) sseSource.close();
+  document.getElementById('logPanel').innerHTML = '';
+  addLog('🔍 Iniciando escaneamento...', 'scan');
+
+  const d = await fetch('/api/escanear-tela', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ seiUrl, usuario, senha, telaUrl, cenarioId, descricao, modulo, headless, abas })
+  }).then(r => r.json());
+  execId = d.exec_id;
+
+  iniciarSSE(execId, (finalLevel) => {
+    document.getElementById('btnScan').disabled = false;
+    if (finalLevel !== 'error') {
+      const id = cenarioId || 'scan-' + telaUrl.replace(/[^a-z0-9]/gi,'-').replace(/-+/g,'-').replace(/-xhtml$/,'').slice(0,40);
+      cenarioGeradoId = id;
+      document.getElementById('scanResultado').style.display = 'block';
+      setStatusExec('gerado', 'ok');
+      carregarCenarios();
+      carregarFormDadosTeste(id);
+      toast('Cenário gerado com sucesso!', 'ok');
+    }
+  });
+}
+
+// ── Dados de teste ─────────────────────────────────────────────────────────
+async function carregarFormDadosTeste(cenarioId) {
+  try {
+    const cenario = await fetch(`/cenarios/${cenarioId}.json`).then(r => r.json());
+    const acoes   = (cenario.inserir || {}).acoes || [];
+    const campos  = acoes.filter(a => a.tipo === 'preencher' || a.tipo === 'selecionar');
+    const form    = document.getElementById('dadosTesteForm');
+    const selChave= document.getElementById('selectCampoChave');
+
+    if (!campos.length) {
+      form.innerHTML = '<div class="empty" style="padding:10px">Nenhum campo preenchível detectado.</div>';
+      return;
+    }
+
+    let html = `<table class="dt-table">
+      <thead><tr>
+        <th style="width:30%">Campo</th>
+        <th class="c-ins" style="width:35%">Valor (Inserir)</th>
+        <th class="c-alt" style="width:35%">Novo Valor (Alterar)</th>
+      </tr></thead><tbody>`;
+
+    selChave.innerHTML = '<option value="">— Selecione —</option>';
+    campos.forEach(a => {
+      const label = a.label || a.campo || '?';
+      const campo = a.campo || '';
+      html += `<tr>
+        <td><span style="font-weight:600">${label}</span>${a.tipo==='selecionar'?'<span class="sel-hint">▼ select</span>':''}</td>
+        <td><input type="text" class="dt-inp dado-inserir" data-campo="${campo}" value="${esc(a.valor||'')}" placeholder="valor para inserir" /></td>
+        <td><input type="text" class="dt-inp dado-alterar" data-campo="${campo}" value="${esc(a.valor_alterar||'')}" placeholder="deixe em branco = não altera" /></td>
+      </tr>`;
+      const opt = document.createElement('option');
+      opt.value = campo; opt.textContent = label;
+      if (campo === cenario.campo_chave) opt.selected = true;
+      selChave.appendChild(opt);
+    });
+
+    html += '</tbody></table>';
+    form.innerHTML = html;
+  } catch(e) {
+    document.getElementById('dadosTesteForm').innerHTML =
+      `<div class="empty" style="color:var(--red);padding:10px">Erro: ${e.message}</div>`;
+  }
+}
+
+function esc(s) { return (s || '').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+async function salvarDadosTeste() {
+  if (!cenarioGeradoId) return false;
+  const campos = [];
+  document.querySelectorAll('.dado-inserir').forEach(inp => {
+    const campo = inp.dataset.campo;
+    const altInp = document.querySelector(`.dado-alterar[data-campo="${campo}"]`);
+    campos.push({ campo, valor: inp.value.trim(), valor_alterar: altInp?.value.trim() || inp.value.trim() });
+  });
+  const campoChave = document.getElementById('selectCampoChave').value;
+  try {
+    const d = await fetch('/api/atualizar-dados-teste', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ cenario_id: cenarioGeradoId, campos, campo_chave: campoChave })
+    }).then(r => r.json());
+    if (d.ok) {
+      const msg = document.getElementById('dadosSalvoMsg');
+      msg.style.display = '';
+      setTimeout(() => msg.style.display = 'none', 3000);
+      return true;
+    } else { toast('Erro ao salvar: ' + (d.erro || 'desconhecido'), 'err'); return false; }
+  } catch(e) { toast('Erro ao salvar dados: ' + e.message, 'err'); return false; }
+}
+
+async function salvarEExecutar() {
+  const ok = await salvarDadosTeste();
+  if (!ok) return;
+  document.getElementById('seiUrl').value  = document.getElementById('scanSeiUrl').value;
+  document.getElementById('usuario').value = document.getElementById('scanUsuario').value;
+  document.getElementById('senha').value   = document.getElementById('scanSenha').value;
+  centerTab('exec');
+  await carregarCenarios();
+  setTimeout(() => { document.querySelector(`.cenario-item[data-id="${cenarioGeradoId}"]`)?.click(); }, 400);
+}
+
+// ── Editar dados (cenário existente) ──────────────────────────────────────
+function toggleEditarDados() {
+  editarDadosAberto = !editarDadosAberto;
+  const card = document.getElementById('cardEditarDados');
+  card.style.display = editarDadosAberto ? 'block' : 'none';
+  if (editarDadosAberto && cenarioAtivo) carregarFormDadosTesteExec(cenarioAtivo.id);
+}
+
+async function carregarFormDadosTesteExec(cenarioId) {
+  const form     = document.getElementById('dadosTesteFormExec');
+  const selChave = document.getElementById('selectCampoChaveExec');
+  form.innerHTML = '<div class="empty" style="padding:8px">Carregando...</div>';
+  try {
+    const cenario = await fetch(`/cenarios/${cenarioId}.json`).then(r => r.json());
+    const campos  = ((cenario.inserir || {}).acoes || []).filter(a => a.tipo === 'preencher' || a.tipo === 'selecionar');
+
+    if (!campos.length) { form.innerHTML = '<div class="empty" style="padding:8px">Nenhum campo preenchível.</div>'; return; }
+
+    let html = `<table class="dt-table" style="margin-bottom:8px">
+      <thead><tr>
+        <th style="width:30%">Campo</th>
+        <th class="c-ins" style="width:35%">Valor (Inserir)</th>
+        <th class="c-alt" style="width:35%">Novo Valor (Alterar)</th>
+      </tr></thead><tbody>`;
+
+    selChave.innerHTML = '<option value="">— Selecione —</option>';
+    campos.forEach(a => {
+      const label = a.label || a.campo || '?';
+      const campo = a.campo || '';
+      html += `<tr>
+        <td style="font-weight:600">${label}</td>
+        <td><input type="text" class="dt-inp exec-inserir" data-campo="${campo}" value="${esc(a.valor||'')}" placeholder="valor inserir" /></td>
+        <td><input type="text" class="dt-inp exec-alterar" data-campo="${campo}" value="${esc(a.valor_alterar||'')}" placeholder="deixe em branco = mesmo" /></td>
+      </tr>`;
+      const opt = document.createElement('option');
+      opt.value = campo; opt.textContent = label;
+      if (campo === cenario.campo_chave) opt.selected = true;
+      selChave.appendChild(opt);
+    });
+    html += '</tbody></table>';
+    form.innerHTML = html;
+  } catch(e) { form.innerHTML = `<div class="empty" style="color:var(--red);padding:8px">Erro: ${e.message}</div>`; }
+}
+
+async function salvarDadosTesteExec() {
+  if (!cenarioAtivo) return;
+  const campos = [];
+  document.querySelectorAll('.exec-inserir').forEach(inp => {
+    const campo = inp.dataset.campo;
+    const altInp = document.querySelector(`.exec-alterar[data-campo="${campo}"]`);
+    campos.push({ campo, valor: inp.value.trim(), valor_alterar: altInp?.value.trim() || '' });
+  });
+  const campoChave = document.getElementById('selectCampoChaveExec').value;
+  try {
+    const d = await fetch('/api/atualizar-dados-teste', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ cenario_id: cenarioAtivo.id, campos, campo_chave: campoChave })
+    }).then(r => r.json());
+    if (d.ok) {
+      const msg = document.getElementById('dadosSalvoMsgExec');
+      msg.style.display = '';
+      setTimeout(() => msg.style.display = 'none', 3000);
+      toast('Dados salvos!', 'ok');
+    } else { toast('Erro ao salvar: ' + (d.erro || ''), 'err'); }
+  } catch(e) { toast('Erro: ' + e.message, 'err'); }
+}
+
+// ── Relatórios ─────────────────────────────────────────────────────────────
+async function carregarTodosRelatorios() {
+  try {
+    const reps = await fetch('/api/relatorios').then(r => r.json());
+    const el   = document.getElementById('todosRelatorios');
+    if (!reps.length) { el.innerHTML = '<div class="empty">Nenhum relatório ainda.</div>'; return; }
+    el.innerHTML = reps.map(r => `
+      <div class="rel-row" onclick="verRelatorio('${r.id}')">
+        <span class="rel-cenario">${r.cenario}</span>
+        <span class="rel-data">${r.data}</span>
+        <span class="badge badge-${r.status==='ok'?'ok':'err'}">${r.status}</span>
+        <span class="rel-pass">${r.passou}✓</span>
+        <span class="rel-fail">${r.falhou}✗</span>
+      </div>`).join('');
+  } catch(e) {}
+}
+
+async function verRelatorio(id) {
+  try {
+    const d     = await fetch(`/api/relatorio/${id}`).then(r => r.json());
+    const steps = d.steps || [];
+    const pass  = steps.filter(s => s.passou).length;
+    const fail  = steps.filter(s => !s.passou).length;
+    const total = steps.length;
+
+    document.getElementById('mRelTitulo').textContent = d.cenario_descricao || d.cenario_id;
+    document.getElementById('mRelStats').innerHTML = `
+      <div class="stat-box"><div class="stat-num">${total}</div><div class="stat-lbl">Etapas</div></div>
+      <div class="stat-box s-ok"><div class="stat-num">${pass}</div><div class="stat-lbl">Passaram</div></div>
+      <div class="stat-box s-err"><div class="stat-num">${fail}</div><div class="stat-lbl">Falharam</div></div>`;
+
+    const opClass = op => op.includes('inserir')?'op-ins':op.includes('alterar')?'op-alt':op.includes('excluir')?'op-exc':op.includes('ortografia')?'op-ort':'';
+    document.getElementById('mRelSteps').innerHTML = steps.map(s => `
+      <div class="step-row">
+        <span class="step-ico">${s.passou ? '✅' : '❌'}</span>
+        <div class="step-info">
+          <span class="step-op ${opClass(s.operacao)}">${s.operacao}</span>${s.descricao}
+          ${!s.passou && s.mensagem ? `<div class="step-err-msg">→ ${s.mensagem}</div>` : ''}
+        </div>
+        <span style="font:10px var(--mono);color:var(--tx3);flex-shrink:0">${s.duracao_ms}ms</span>
+      </div>`).join('');
+
+    const btnHtml = document.getElementById('mRelBtnHtml');
+    btnHtml.onclick = () => window.open(`/relatorio/${id}`, '_blank');
+    document.getElementById('modalRel').classList.add('open');
+  } catch(e) { toast('Erro ao carregar relatório.', 'err'); }
+}
+
+function fecharModal() { document.getElementById('modalRel').classList.remove('open'); }
+
+// ── Telas sugeridas ────────────────────────────────────────────────────────
+function carregarTelasSugeridas() {
+  document.getElementById('telasSugeridas').innerHTML = TELAS_COMUNS.map(t =>
+    `<button class="tela-pill" onclick="preencherTela(${escJson(t)})">${t.label}</button>`
+  ).join('');
+}
+
+function preencherTela(t) {
+  document.getElementById('scanTela').value     = t.tela;
+  document.getElementById('scanId').value       = t.id;
+  document.getElementById('scanModulo').value   = t.modulo;
+  document.getElementById('scanDescricao').value = 'CRUD Completo - ' + t.label;
+}
+
+function carregarModulosSEI() {
+  const grupos = {};
+  TELAS_COMUNS.forEach(t => { if (!grupos[t.modulo]) grupos[t.modulo] = []; grupos[t.modulo].push(t); });
+  let html = '';
+  for (const [mod, ts] of Object.entries(grupos)) {
+    html += `<div class="grp-label">${mod}</div>`;
+    ts.forEach(t => {
+      html += `<div class="cenario-item" onclick="preencherTelaEScan(${escJson(t)})">
+        <div class="c-nome">${t.label}</div>
+        <div class="c-mod" style="color:var(--orange)">🔍 Clique para escanear</div>
+      </div>`;
+    });
+  }
+  document.getElementById('listaModulos').innerHTML = html;
+}
+
+function preencherTelaEScan(t) { preencherTela(t); showScanTab(); }
+
+// ── SSE ────────────────────────────────────────────────────────────────────
+function iniciarSSE(id, onDone) {
+  let lastLevel = 'info';
+  sseSource = new EventSource(`/api/sse/${id}`);
+  sseSource.onmessage = e => {
+    const msg = JSON.parse(e.data);
+    if (msg.level === 'done') { sseSource.close(); if (onDone) onDone(lastLevel); return; }
+    lastLevel = msg.level || lastLevel;
+    addLog(`[${msg.time}] ${msg.message}`, msg.level);
+    if (msg.level === 'success') setStatusExec('ok', 'ok');
+    if (msg.level === 'error')   setStatusExec('erro', 'err');
+  };
+}
+
+function addLog(msg, level) {
+  const el  = document.getElementById('logPanel');
+  const div = document.createElement('div');
+  div.className = 'log-line ll-' + (level || 'info');
+  div.textContent = msg;
+  el.appendChild(div);
+  el.scrollTop = el.scrollHeight;
+}
+
+function limparLog() { document.getElementById('logPanel').innerHTML = ''; }
+
+function setStatusExec(text, type) {
+  const el = document.getElementById('statusExec');
+  el.textContent = text;
+  el.className = 'badge badge-' + type;
+  el.style.display = '';
+}
+
+// ── Tabs ───────────────────────────────────────────────────────────────────
+function leftTab(name) {
+  document.getElementById('ptabCenarios').classList.toggle('on', name === 'cenarios');
+  document.getElementById('ptabModulos').classList.toggle('on',  name === 'modulos');
+  document.getElementById('tabCenarios').style.display = name === 'cenarios' ? 'flex' : 'none';
+  document.getElementById('tabModulos').style.display  = name === 'modulos'  ? 'block': 'none';
+}
+
+function centerTab(name) {
+  document.querySelectorAll('.c-tab').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.tab-pane').forEach(t => t.classList.remove('on'));
+  const cap = name.charAt(0).toUpperCase() + name.slice(1);
+  document.getElementById('ctab' + cap)?.classList.add('on');
+  document.getElementById('pane' + cap)?.classList.add('on');
+  if (name === 'rel') carregarTodosRelatorios();
+}
+
+// ── Recompilar ─────────────────────────────────────────────────────────────
+async function recompilar() {
+  if (!confirm('Recompilar o bot? Isso pode demorar alguns minutos.')) return;
+  const d = await fetch('/api/recompilar', { method:'POST', body:'{}' }).then(r => r.json());
+  addLog('Recompilando bot...', 'info');
+  toast('Recompilando bot…', 'info', 6000);
+  iniciarSSE(d.exec_id, () => {
+    carregarStatus();
+    addLog('Recompilação concluída.', 'success');
+    toast('Recompilação concluída!', 'ok');
+  });
+}
+</script>
+</body>
+</html>

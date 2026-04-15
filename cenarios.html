@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Cenários - Otimize Qualidade</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root { --bg:#0f1117; --surface:#1a1d2e; --surface2:#252840; --border:#2d3155; --accent:#6c63ff; --accent2:#00d4aa; --danger:#ff4757; --warn:#ffa502; --text:#e8eaf6; --text2:#8892b0; --success:#2ecc71; }
+  body { font-family:'Segoe UI',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+  header { background:var(--surface); border-bottom:1px solid var(--border); padding:12px 24px; display:flex; align-items:center; gap:12px; }
+  header .logo { font-size:1.2em; font-weight:700; color:var(--accent); }
+  header a { color:var(--text2); text-decoration:none; font-size:0.85em; }
+  header a:hover { color:var(--accent2); }
+  .container { max-width:1100px; margin:0 auto; padding:24px; }
+  h2 { font-size:1.2em; color:var(--accent); margin-bottom:20px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:16px; }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px; transition:border-color 0.2s; }
+  .card:hover { border-color:var(--accent); }
+  .card-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
+  .card-title { font-weight:700; font-size:0.95em; }
+  .card-modulo { font-size:0.75em; color:var(--accent2); background:rgba(0,212,170,0.1); padding:2px 8px; border-radius:10px; }
+  .card-tela { font-size:0.75em; color:var(--text2); margin:6px 0; font-family:monospace; }
+  .card-ops { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
+  .tag { padding:2px 8px; border-radius:3px; font-size:0.7em; font-weight:700; text-transform:uppercase; }
+  .tag-inserir { background:rgba(0,212,170,0.2); color:var(--accent2); }
+  .tag-alterar { background:rgba(255,165,2,0.2); color:var(--warn); }
+  .tag-excluir { background:rgba(255,71,87,0.2); color:var(--danger); }
+  .btn { padding:8px 16px; border-radius:6px; border:none; cursor:pointer; font-size:0.82em; font-weight:600; transition:all 0.2s; text-decoration:none; display:inline-block; }
+  .btn-primary { background:var(--accent); color:#fff; }
+  .btn-secondary { background:var(--surface2); color:var(--text); border:1px solid var(--border); }
+  .btn-primary:hover { background:#7c75ff; }
+  .btn-secondary:hover { border-color:var(--accent); }
+  .card-actions { display:flex; gap:8px; margin-top:14px; }
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:100; align-items:center; justify-content:center; }
+  .modal-overlay.show { display:flex; }
+  .modal { background:var(--surface); border:1px solid var(--border); border-radius:12px; width:700px; max-height:80vh; display:flex; flex-direction:column; }
+  .modal-header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+  .modal-body { padding:20px; overflow-y:auto; flex:1; }
+  pre { background:var(--bg); padding:16px; border-radius:8px; font-size:0.78em; overflow-x:auto; color:var(--accent2); }
+  .close-btn { background:none; border:none; color:var(--text2); font-size:1.3em; cursor:pointer; }
+  .close-btn:hover { color:var(--text); }
+  .empty { text-align:center; color:var(--text2); padding:40px 20px; }
+</style>
+</head>
+<body>
+<header>
+  <span class="logo">&#9889; Otimize Qualidade</span>
+  <a href="/">&#8592; Voltar ao Dashboard</a>
+</header>
+
+<div class="container">
+  <h2>Cenários de Teste Disponíveis</h2>
+  <div class="grid" id="grid"><div class="empty">Carregando...</div></div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <span id="modalTitle" style="font-weight:700">Cenário</span>
+      <button class="close-btn" onclick="fecharModal()">&#215;</button>
+    </div>
+    <div class="modal-body">
+      <pre id="modalJson"></pre>
+    </div>
+  </div>
+</div>
+
+<script>
+async function carregarCenarios() {
+  const r = await fetch('/api/cenarios');
+  const lista = await r.json();
+  const grid = document.getElementById('grid');
+  if (!lista.length) { grid.innerHTML = '<p style="color:var(--text2)">Nenhum cenário encontrado em /cenarios/</p>'; return; }
+  grid.innerHTML = lista.map(c => `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">${c.descricao}</div>
+        <span class="card-modulo">${c.modulo || 'Geral'}</span>
+      </div>
+      <div class="card-tela">ID: ${c.id}</div>
+      <div class="card-ops">
+        ${(c.operacoes||[]).map(o=>`<span class="tag tag-${o}">${o}</span>`).join('')}
+      </div>
+      <div class="card-actions">
+        <button class="btn btn-secondary" onclick="verJson('${c.id}')">Ver JSON</button>
+        <a href="/?cenario=${c.id}" class="btn btn-primary">&#9654; Executar</a>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function verJson(id) {
+  const r2 = await fetch(`/cenarios/${id}.json`).catch(() => null);
+  let json = null;
+  if (r2 && r2.ok) {
+    json = await r2.json();
+  } else {
+    const r = await fetch(`/api/cenarios`);
+    const lista = await r.json();
+    json = lista.find(c => c.id === id);
+  }
+  document.getElementById('modalTitle').textContent = json?.descricao || id;
+  document.getElementById('modalJson').textContent = JSON.stringify(json, null, 2);
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function fecharModal() { document.getElementById('modalOverlay').classList.remove('show'); }
+document.getElementById('modalOverlay').addEventListener('click', e => { if(e.target===e.currentTarget) fecharModal(); });
+
+carregarCenarios();
+</script>
+</body>
+</html>

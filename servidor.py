@@ -227,7 +227,7 @@ def rodar_cenario(params, exec_id):
         if html_path.exists():
             send_sse(exec_id, f"📋 Ver relatório visual: http://localhost:{PORT}/relatorio/{exec_id}", "success")
 
-    status = "concluido" if process.returncode == 0 else "erro"
+    status = "concluido" if relatorio_path.exists() else "erro"
     execucoes_ativas[exec_id] = status
     send_sse(exec_id, f"Execução {'concluída' if status == 'concluido' else 'com erros'}.", "success" if status == "concluido" else "error")
 
@@ -453,6 +453,27 @@ td{{padding:8px 14px;font-size:.83em;border-bottom:1px solid #1a1d2e}}tr:hover t
             thread = threading.Thread(target=escanear_tela, args=(params, exec_id), daemon=True)
             thread.start()
             self.json_response({"exec_id": exec_id})
+
+        elif path == "/api/parar-execucao":
+            exec_id = params.get("exec_id", "").strip()
+            proc = execucoes_ativas.get(exec_id)
+            if proc and hasattr(proc, "pid"):
+                try:
+                    # taskkill /T mata o processo Java + todos os filhos (ChromeDriver e Chrome)
+                    subprocess.run(
+                        ["taskkill", "/F", "/T", "/PID", str(proc.pid)],
+                        capture_output=True
+                    )
+                except Exception:
+                    try:
+                        proc.terminate()
+                    except Exception:
+                        pass
+                execucoes_ativas[exec_id] = "parado"
+                send_sse(exec_id, "Execução interrompida pelo usuário.", "error")
+                self.json_response({"ok": True})
+            else:
+                self.json_response({"ok": False, "msg": "Execução não encontrada ou já finalizada"})
 
         elif path == "/api/salvar-cenario":
             cenario_id = params.get("id", "").strip()

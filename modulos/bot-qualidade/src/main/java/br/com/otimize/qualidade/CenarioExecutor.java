@@ -1840,7 +1840,7 @@ public class CenarioExecutor {
                 } catch (Exception ignored) {}
             }
         } catch (Exception ignored) {}
-
+ 
         String totalText = sb.toString().replaceAll("\\s+", " ").trim();
         
         // LOG DE DEBUG PARA VOCÊ VER O QUE O BOT ESTÁ LENDO

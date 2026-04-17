@@ -209,6 +209,7 @@ body { background: var(--bg); color: var(--tx); font-family: var(--sans); font-s
 .op-alt { background: rgba(210,153,34,.18); color: var(--amber); border: 1px solid rgba(210,153,34,.35); }
 .op-exc { background: rgba(248,81,73,.15); color: var(--red);   border: 1px solid rgba(248,81,73,.3); }
 .op-ort { background: rgba(188,140,255,.15); color: var(--purple); border: 1px solid rgba(188,140,255,.3); }
+.op-cam { background: rgba(88,166,255,.15); color: var(--blue);   border: 1px solid rgba(88,166,255,.3); }
 
 /* ── Badges ── */
 .badge { padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; }
@@ -447,12 +448,14 @@ body { background: var(--bg); color: var(--tx); font-family: var(--sans); font-s
               <label><input type="checkbox" id="opAlterar" checked> <span class="op op-alt">Alterar</span></label>
               <label><input type="checkbox" id="opExcluir" checked> <span class="op op-exc">Excluir</span></label>
               <label><input type="checkbox" id="opOrtografia" checked> <span class="op op-ort">Ortografia</span></label>
+              <label><input type="checkbox" id="opCamposObrigatorios" checked> <span class="op op-cam">Campos Obrigatórios</span></label>
             </div>
             <div class="hint" style="margin-top:6px">
               <strong style="color:var(--green)">Inserir</strong> — abre o formulário, preenche os campos e salva um novo registro.<br>
               <strong style="color:var(--amber)">Alterar</strong> — busca o registro criado pelo campo-chave, abre e edita.<br>
               <strong style="color:var(--red)">Excluir</strong> — busca o registro e remove com confirmação de diálogo.<br>
               <strong style="color:var(--purple)">Ortografia</strong> — analisa todo o texto visível na tela em busca de erros gramaticais ou ortográficos.<br>
+              <strong style="color:var(--blue)">Campos Obrigatórios</strong> — preenche o formulário com dados de teste, limpa os campos marcados como obrigatórios e tenta salvar. Confirma se o sistema realmente bloqueia o salvamento quando esses campos estão vazios.<br>
               Execute apenas <strong>Inserir</strong> para testar somente o cadastro sem apagar.
             </div>
           </div>
@@ -629,7 +632,7 @@ body { background: var(--bg); color: var(--tx); font-family: var(--sans); font-s
           </div>
           <div class="doc-card">
             <div class="doc-card-title">▶ Executar Cenário</div>
-            <div class="doc-card-body">O bot lê o cenário JSON, abre o Chrome, faz login e executa inserir → alterar → excluir. Cada etapa é registrada com resultado (passou/falhou), duração e screenshot em caso de erro.</div>
+            <div class="doc-card-body">O bot lê o cenário JSON, abre o Chrome, faz login e executa inserir → alterar → excluir → campos obrigatórios. Cada etapa é registrada com resultado (passou/falhou), duração e screenshot em caso de erro.</div>
           </div>
           <div class="doc-card">
             <div class="doc-card-title">📋 Relatórios</div>
@@ -695,6 +698,20 @@ body { background: var(--bg); color: var(--tx); font-family: var(--sans); font-s
           <div class="flow-box">Verifica cada label com LanguageTool</div><div class="flow-arrow">→</div>
           <div class="flow-box">Detecta erros críticos conhecidos</div><div class="flow-arrow">→</div>
           <div class="flow-box">Reporta erros ou confirma ortografia correta</div>
+        </div>
+        <div class="doc-h3"><span class="op op-cam" style="border-radius:3px;padding:2px 7px;font-size:11px;font-weight:700">Campos Obrigatórios</span></div>
+        <div class="flow-row">
+          <div class="flow-box">Abre formulário em branco (clica Novo)</div><div class="flow-arrow">→</div>
+          <div class="flow-box">Detecta campos com classe <code style="font-size:10px">camposObrigatorios</code></div><div class="flow-arrow">→</div>
+          <div class="flow-box">Preenche todos os outros campos com dados de teste</div><div class="flow-arrow">→</div>
+          <div class="flow-box">Limpa só os campos obrigatórios</div><div class="flow-arrow">→</div>
+          <div class="flow-box">Clica Salvar/Gravar</div><div class="flow-arrow">→</div>
+          <div class="flow-box">Confirma se sistema bloqueou e acusou erro nos campos</div>
+        </div>
+        <div class="doc-p" style="margin-top:4px;margin-bottom:8px">
+          Um campo é confirmado como obrigatório <strong>somente se</strong> o sistema <em>bloquear o salvamento</em> e exibir um indicador de erro naquele campo específico quando ele está vazio.
+          Se o sistema salvar sem o campo preenchido, o campo é reportado como <strong style="color:var(--red)">NÃO confirmado</strong> — indicando uma falha na validação do sistema.
+          Esta operação é executada após <span class="tag-red">Excluir</span>, utilizando um novo registro de teste.
         </div>
         <div class="doc-p" style="margin-top:8px">
           O bot usa o valor <code>{{timestamp}}</code> nos campos de texto para garantir um nome único a cada execução
@@ -1035,6 +1052,7 @@ async function executarCenario() {
   if (document.getElementById('opAlterar').checked) ops.push('alterar');
   if (document.getElementById('opExcluir').checked) ops.push('excluir');
   if (document.getElementById('opOrtografia').checked) ops.push('ortografia');
+  if (document.getElementById('opCamposObrigatorios').checked) ops.push('campos_obrigatorios');
   if (!ops.length) { toast('Selecione ao menos uma operação.', 'err'); return; }
 
   document.getElementById('btnExecutar').disabled = true;
@@ -1301,7 +1319,7 @@ async function verRelatorio(id) {
       <div class="stat-box s-ok"><div class="stat-num">${pass}</div><div class="stat-lbl">Passaram</div></div>
       <div class="stat-box s-err"><div class="stat-num">${fail}</div><div class="stat-lbl">Falharam</div></div>`;
 
-    const opClass = op => op.includes('inserir')?'op-ins':op.includes('alterar')?'op-alt':op.includes('excluir')?'op-exc':op.includes('ortografia')?'op-ort':'';
+    const opClass = op => op.includes('inserir')?'op-ins':op.includes('alterar')?'op-alt':op.includes('excluir')?'op-exc':op.includes('ortografia')?'op-ort':op.includes('campos')?'op-cam':'';
     document.getElementById('mRelSteps').innerHTML = steps.map(s => `
       <div class="step-row">
         <span class="step-ico">${s.passou ? '✅' : '❌'}</span>

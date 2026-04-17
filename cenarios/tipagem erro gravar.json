@@ -8,7 +8,8 @@
     "inserir",
     "alterar",
     "excluir",
-    "ortografia"
+    "ortografia",
+    "campos_obrigatorios"
   ],
   "campo_chave": "descrio",
   "dados_teste": {

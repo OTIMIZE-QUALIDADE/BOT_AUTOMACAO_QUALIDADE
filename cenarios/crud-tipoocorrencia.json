@@ -1,8 +1,9 @@
 {
-  "id": "Ouvidoria",
-  "descricao": "ouvidoria",
-  "modulo": "administrativo",
-  "tela": "visaoAdministrativo/administrativo/tipagemOuvidoriaForm.xhtml",
+  "id": "crud-tipoocorrencia",
+  "descricao": "CRUD - TIPOOCORRENCIA - ORTOGRAFIA - OBRIGATORIOS",
+  "modulo": "Acadêmico",
+  "tela": "visaoAdministrativo/academico/tipoAdvertenciaCons.xhtml",
+  "tela_form": "visaoAdministrativo/academico/tipoAdvertenciaForm.xhtml",
   "_gerado_automaticamente": true,
   "operacoes_disponiveis": [
     "inserir",
@@ -11,11 +12,13 @@
     "ortografia",
     "campos_obrigatorios"
   ],
-  "campo_chave": "tipo_ouvidoria",
+  "campo_chave": "descrio",
   "dados_teste": {
-    "descricaoo": "TESTE QA {{timestamp}}",
-    "tipo_ouvidoria": "Reclamação",
-    "tipo_ouvidoria_opcoes_disponiveis": "Reclamação | Dúvida | Sugestão | Elogio | Outros"
+    "descrio": "TESTE QA {{timestamp}}",
+    "situao": "Ativo",
+    "situao_opcoes_disponiveis": "Ativo | Inativo",
+    "modelo_impresso": "TESTE QA {{timestamp}}",
+    "descrio_padro_para_ocorrncia": "TESTE QA {{timestamp}}"
   },
   "inserir": {
     "acoes": [
@@ -34,14 +37,14 @@
       },
       {
         "tipo": "clicar_aba",
-        "label": "new RichFaces.ui.Status(\"statusCarregandoModalTopo\",{\"onstop\":function(event){va",
-        "valor": "new RichFaces.ui.Status(\"statusCarregandoModalTopo\",{\"onstop\":function(event){va",
+        "label": "Reponsável Cadastro",
+        "valor": "Reponsável Cadastro",
         "localizadores": []
       },
       {
         "tipo": "preencher",
-        "campo": "descricaoo",
-        "label": "descricaoo",
+        "campo": "descrio",
+        "label": "Descrição",
         "valor": "TESTE QA {{timestamp}}",
         "_id_atual": "form:descricao",
         "localizadores": [
@@ -53,15 +56,41 @@
       },
       {
         "tipo": "selecionar",
-        "campo": "tipo_ouvidoria",
-        "label": "Tipo Ouvidoria",
-        "valor": "Reclamação",
-        "_id_atual": "form:tipoOuvidoria",
+        "campo": "situao",
+        "label": "Situação",
+        "valor": "Ativo",
+        "_id_atual": "form:situacao",
         "localizadores": [
-          "#form\\:tipoOuvidoria",
-          "select[id='form:tipoOuvidoria']",
-          "select[id*='tipoOuvidoria']",
-          "select[name='form:tipoOuvidoria']"
+          "#form\\:situacao",
+          "select[id='form:situacao']",
+          "select[id*='situacao']",
+          "select[name='form:situacao']"
+        ]
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "modelo_impresso",
+        "label": "Modelo Impressão",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "form:textoPadrao",
+        "localizadores": [
+          "#form\\:textoPadrao",
+          "select[id='form:textoPadrao']",
+          "select[id*='textoPadrao']",
+          "select[name='form:textoPadrao']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "descrio_padro_para_ocorrncia",
+        "label": "Descrição Padrão para Ocorrência",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "form:descricaoAdvertencia",
+        "localizadores": [
+          "#form\\:descricaoAdvertencia",
+          "textarea[id='form:descricaoAdvertencia']",
+          "textarea[id*='descricaoAdvertencia']",
+          "textarea[name='form:descricaoAdvertencia']"
         ]
       },
       {
@@ -89,10 +118,6 @@
         "tipo": "mensagem_sucesso",
         "valor": "sucesso",
         "_alternativas": "Ajuste para a mensagem real de sucesso do SEI (ex: 'salvo com sucesso', 'cadastrado')"
-      },
-      {
-        "tipo": "ortografia",
-        "valor": "Verificar erros de ortografia na tela"
       }
     ]
   },
@@ -100,14 +125,14 @@
     "acoes": [
       {
         "tipo": "clicar_aba",
-        "label": "new RichFaces.ui.Status(\"statusCarregandoModalTopo\",{\"onstop\":function(event){va",
-        "valor": "new RichFaces.ui.Status(\"statusCarregandoModalTopo\",{\"onstop\":function(event){va",
+        "label": "Reponsável Cadastro",
+        "valor": "Reponsável Cadastro",
         "localizadores": []
       },
       {
         "tipo": "preencher",
-        "campo": "descricaoo",
-        "label": "descricaoo",
+        "campo": "descrio",
+        "label": "Descrição",
         "valor": "TESTE QA {{timestamp}}",
         "valor_alterar": "TESTE QA {{timestamp}}",
         "localizadores": [
@@ -115,6 +140,19 @@
           "input[id='form:descricao']",
           "input[id*='descricao']",
           "input[name='form:descricao']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "descrio_padro_para_ocorrncia",
+        "label": "Descrição Padrão para Ocorrência",
+        "valor": "TESTE QA {{timestamp}}",
+        "valor_alterar": "TESTE QA {{timestamp}}",
+        "localizadores": [
+          "#form\\:descricaoAdvertencia",
+          "textarea[id='form:descricaoAdvertencia']",
+          "textarea[id*='descricaoAdvertencia']",
+          "textarea[name='form:descricaoAdvertencia']"
         ]
       },
       {
@@ -141,10 +179,6 @@
       {
         "tipo": "mensagem_sucesso",
         "valor": "sucesso"
-      },
-      {
-        "tipo": "ortografia",
-        "valor": "Verificar erros de ortografia na tela"
       }
     ]
   },

@@ -35,6 +35,7 @@ public class CenarioExecutor {
     private WebDriver driver;
     private SmartLocator locator;
     private final SpellChecker spellChecker;
+    private final ValidadorCamposObrigatorios validadorCampos;
 
     // Valor do campo chave usado no inserir — reutilizado para buscar no alterar/excluir
     private String valorChaveInserido = null;
@@ -50,6 +51,7 @@ public class CenarioExecutor {
         this.locatorsPath = locatorsPath;
         this.headless = headless;
         this.spellChecker = new SpellChecker();
+        this.validadorCampos = new ValidadorCamposObrigatorios();
     }
 
     public List<StepResult> executar(TestScenario cenario, List<String> operacoes) {
@@ -101,6 +103,9 @@ public class CenarioExecutor {
                         break;
                     case "ortografia":
                         resultados.addAll(executarOrtografia(cenario));
+                        break;
+                    case "campos_obrigatorios":
+                        resultados.addAll(executarCamposObrigatorios(cenario));
                         break;
                 }
             }
@@ -434,6 +439,223 @@ public class CenarioExecutor {
         result.setDuracaoMs(System.currentTimeMillis() - start);
         resultados.add(result);
         return resultados;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────
+    // CAMPOS OBRIGATÓRIOS
+    // Fluxo: abrir form → detectar candidatos → preencher TUDO (dados de teste)
+    //         → limpar só os camposObrigatorios → clicar SALVAR → analisar resultado
+    // Rodado após Excluir (última operação da sequência).
+    // ─────────────────────────────────────────────────────────────────────────────
+
+    private List<StepResult> executarCamposObrigatorios(TestScenario cenario) {
+        List<StepResult> resultados = new ArrayList<>();
+        System.out.println("[INFO] ══ CAMPOS OBRIGATÓRIOS ══");
+
+        // ── 1. Navega para Cons e abre o formulário em branco ─────────────────────
+        navegarParaCons(cenario);
+        StepResult abrirForm = abrirFormularioNovo(cenario);
+        resultados.add(abrirForm);
+
+        if (!abrirForm.isPassou()) {
+            StepResult err = new StepResult("campos_obrigatorios", "Validação de campos obrigatórios");
+            err.setPassou(false);
+            err.setMensagem("Não foi possível abrir o formulário para executar a validação.");
+            err.setDuracaoMs(0);
+            resultados.add(err);
+            return resultados;
+        }
+
+        // ── 2. Fase 1 — Detecta campos com classe camposObrigatorios ──────────────
+        StepResult stepDeteccao = new StepResult("campos_obrigatorios",
+            "Fase 1 — Detectar campos candidatos (classe camposObrigatorios / borda vermelha)");
+        long t0 = System.currentTimeMillis();
+
+        List<ValidadorCamposObrigatorios.CampoObrigatorio> candidatos =
+            validadorCampos.detectarCandidatos(driver);
+
+        if (candidatos.isEmpty()) {
+            stepDeteccao.setPassou(true);
+            stepDeteccao.setMensagem(
+                "Nenhum campo candidato encontrado (nenhum elemento com classe 'camposObrigatorios' ou borda vermelha). " +
+                "Verifique se os campos do formulário possuem a classe CSS 'camposObrigatorios'.");
+            stepDeteccao.setDuracaoMs(System.currentTimeMillis() - t0);
+            resultados.add(stepDeteccao);
+            return resultados;
+        }
+
+        stepDeteccao.setPassou(true);
+        stepDeteccao.setMensagem(candidatos.size() + " campo(s) candidato(s) identificado(s): "
+            + candidatos.stream()
+                .map(c -> c.getLabel() + " [" + c.getTipo() + "]")
+                .collect(Collectors.joining(", ")));
+        stepDeteccao.setDuracaoMs(System.currentTimeMillis() - t0);
+        resultados.add(stepDeteccao);
+
+        // ── 3. Preenche o formulário com dados de teste (silencioso, sem adicionar ao relatório)
+        // Executa todas as ações de inserir, exceto: clicar NOVO (já feito) e clicar SALVAR/GRAVAR
+        System.out.println("[INFO] Preenchendo formulário com dados de teste...");
+        if (cenario.getInserir() != null && cenario.getInserir().getAcoes() != null) {
+            for (TestScenario.Acao acao : cenario.getInserir().getAcoes()) {
+                if (camposAcaoNovo(acao))   continue; // já feito por abrirFormularioNovo
+                if (camposAcaoSalvar(acao)) continue; // salvar é feito manualmente mais abaixo
+                try {
+                    // executa silenciosamente — não adiciona o resultado ao relatório
+                    executarAcao("campos_obrigatorios_preenchimento", acao, cenario.getDados_teste());
+                } catch (Exception ignored) {
+                    // falha de preenchimento não bloqueia — o foco é testar os campos obrigatórios
+                }
+            }
+        }
+
+        // ── 4. Limpa os campos obrigatórios — são eles que devem disparar o erro ──
+        System.out.println("[INFO] Limpando " + candidatos.size() + " campo(s) obrigatório(s) para o teste...");
+        for (ValidadorCamposObrigatorios.CampoObrigatorio campo : candidatos) {
+            try {
+                // Tenta pelo ID primeiro (mais preciso), depois pela classe
+                String cssId = campo.getElementId().isEmpty() ? null
+                    : "#" + campo.getElementId().replace(":", "\\:").replace(".", "\\.");
+                List<WebElement> els = cssId != null
+                    ? driver.findElements(By.cssSelector(cssId))
+                    : driver.findElements(By.cssSelector(
+                        "input.camposObrigatorios, select.camposObrigatorios, textarea.camposObrigatorios"));
+
+                for (WebElement el : els) {
+                    try {
+                        String tag = el.getTagName();
+                        if ("select".equals(tag)) {
+                            ((JavascriptExecutor) driver).executeScript(
+                                "var s=arguments[0]; s.selectedIndex=0;" +
+                                "s.dispatchEvent(new Event('change',{bubbles:true}));", el);
+                        } else {
+                            ((JavascriptExecutor) driver).executeScript(
+                                "var e=arguments[0]; e.value='';" +
+                                "e.dispatchEvent(new Event('input',{bubbles:true}));" +
+                                "e.dispatchEvent(new Event('change',{bubbles:true}));", el);
+                        }
+                        System.out.println("[INFO] Campo limpo para teste: " + campo.getLabel());
+                    } catch (Exception ex) {
+                        System.out.println("[WARN] Não foi possível limpar: " + campo.getLabel() + " — " + ex.getMessage());
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
+        pausa(400); // aguarda AJAX reagir
+
+        // ── 5. Fase 2 — Tenta salvar com os campos obrigatórios vazios ────────────
+        StepResult stepConfirmacao = new StepResult("campos_obrigatorios",
+            "Fase 2 — Confirmar: tentar salvar sem preencher campos obrigatórios");
+        long t1 = System.currentTimeMillis();
+
+        String urlAntesSalvar = driver.getCurrentUrl();
+        boolean clicouSalvar  = camposClicarBotaoSalvar();
+
+        if (!clicouSalvar) {
+            stepConfirmacao.setPassou(false);
+            stepConfirmacao.setMensagem(
+                "Botão SALVAR/GRAVAR não encontrado — confirmação comportamental não executada. " +
+                "Campos mantidos como identificados via classe CSS.");
+            stepConfirmacao.setDuracaoMs(System.currentTimeMillis() - t1);
+            resultados.add(stepConfirmacao);
+        } else {
+            // Aguarda resposta do sistema (até 6 s)
+            final String fonteAntes = driver.getPageSource();
+            try {
+                new org.openqa.selenium.support.ui.WebDriverWait(driver, Duration.ofSeconds(6))
+                    .until(d -> {
+                        try {
+                            return !d.getPageSource().equals(fonteAntes)
+                                || !d.getCurrentUrl().equals(urlAntesSalvar);
+                        } catch (Exception e) { return false; }
+                    });
+            } catch (Exception ignored) {}
+
+            // Delega análise ao validador
+            boolean bloqueou = validadorCampos.analisarResultadoPosSalvar(driver, candidatos, urlAntesSalvar);
+
+            long confirmados = candidatos.stream()
+                .filter(ValidadorCamposObrigatorios.CampoObrigatorio::isConfirmado).count();
+            long naoConfirm  = candidatos.size() - confirmados;
+
+            stepConfirmacao.setPassou(naoConfirm == 0);
+            stepConfirmacao.setMensagem(
+                "Tentativa de salvar executada. " +
+                (bloqueou
+                    ? "Sistema bloqueou corretamente. "
+                    : "ATENÇÃO: Sistema salvou sem os campos obrigatórios. ") +
+                confirmados + " campo(s) confirmado(s) como obrigatório. " +
+                naoConfirm   + " campo(s) NÃO confirmado(s) — sistema não bloqueou.");
+            stepConfirmacao.setDuracaoMs(System.currentTimeMillis() - t1);
+            resultados.add(stepConfirmacao);
+        }
+
+        // ── 6. StepResult individual por campo ────────────────────────────────────
+        for (ValidadorCamposObrigatorios.CampoObrigatorio campo : candidatos) {
+            StepResult r = new StepResult("campos_obrigatorios",
+                "Campo Obrigatório identificado: " + campo.getLabel() + " [" + campo.getTipo() + "]");
+            r.setDuracaoMs(0);
+
+            if (campo.isConfirmado()) {
+                r.setPassou(true);
+                r.setMensagem("Campo Obrigatório identificado: " + campo.getLabel()
+                    + " " + campo.getTipo() + " Verificado e Validado.");
+                System.out.println("[PASS] " + r.getMensagem());
+            } else {
+                r.setPassou(false);
+                r.setMensagem("Campo Obrigatório identificado: " + campo.getLabel()
+                    + " " + campo.getTipo()
+                    + " NÃO confirmado como obrigatório — " + campo.getMotivoFalha() + ".");
+                System.out.println("[FAIL] " + r.getMensagem());
+            }
+            resultados.add(r);
+        }
+
+        // ── 7. Volta para Cons para deixar o driver em estado limpo ───────────────
+        try { navegarParaCons(cenario); } catch (Exception ignored) {}
+
+        return resultados;
+    }
+
+    /** Retorna true se a ação é de clicar o botão NOVO (já tratado por abrirFormularioNovo). */
+    private boolean camposAcaoNovo(TestScenario.Acao acao) {
+        if (!"clicar".equals(acao.getTipo())) return false;
+        String label = acao.getLabel() != null ? acao.getLabel().toLowerCase() : "";
+        return label.contains("nov");
+    }
+
+    /** Retorna true se a ação é de clicar SALVAR/GRAVAR/CONFIRMAR. */
+    private boolean camposAcaoSalvar(TestScenario.Acao acao) {
+        if (!"clicar".equals(acao.getTipo())) return false;
+        String label    = acao.getLabel()       != null ? acao.getLabel().toLowerCase()       : "";
+        String textoBtn = acao.getTexto_botao() != null ? acao.getTexto_botao().toLowerCase() : "";
+        return label.contains("salvar") || label.contains("gravar") || label.contains("confirmar")
+            || textoBtn.contains("gravar") || textoBtn.contains("salvar") || textoBtn.contains("confirmar");
+    }
+
+    /** Localiza e clica no botão SALVAR/GRAVAR do formulário. Retorna true se encontrou. */
+    private boolean camposClicarBotaoSalvar() {
+        List<String> seletores = Arrays.asList(
+            "input[value='GRAVAR']", "input[value='Gravar']",
+            "input[value='SALVAR']", "input[value='Salvar']",
+            "input[value='CONFIRMAR']", "input[value='Confirmar']",
+            "#form\\:salvar\\:salvar", "#form\\:btnGravar", "#form\\:btnSalvar",
+            "input[type='submit']", "button[type='submit']"
+        );
+        for (String s : seletores) {
+            try {
+                WebElement btn = driver.findElement(By.cssSelector(s));
+                if (btn.isDisplayed() && btn.isEnabled()) {
+                    System.out.println("[INFO] CamposObrigatorios: clicando botão SALVAR (" + s + ")");
+                    try { btn.click(); }
+                    catch (Exception e) {
+                        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
+                    }
+                    return true;
+                }
+            } catch (Exception ignored) {}
+        }
+        System.out.println("[WARN] CamposObrigatorios: botão SALVAR não encontrado.");
+        return false;
     }
 
     /**

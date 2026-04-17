@@ -1,8 +1,8 @@
 {
-  "id": "tipodocumento",
-  "descricao": "tipodocumento",
-  "modulo": "administrativo",
-  "tela": "visaoAdministrativo/administrativo/tipoDocumentoForm.xhtml",
+  "id": "CRUD-TIPODOCUMENTO",
+  "descricao": "CRUD COMPLETO - TIPO DOCUMENTO",
+  "modulo": "Administrativo",
+  "tela": "visaoAdministrativo/administrativo/tipoDocumentoCons.xhtml",
   "_gerado_automaticamente": true,
   "operacoes_disponiveis": [
     "inserir",
@@ -11,10 +11,10 @@
     "ortografia",
     "campos_obrigatorios"
   ],
-  "campo_chave": "nnome",
+  "campo_chave": "nome",
   "dados_teste": {
     "tipo_documento_equivalente": "TESTE QA {{timestamp}}",
-    "nnome": "TESTE QA {{timestamp}}",
+    "nome": "TESTE QA {{timestamp}}",
     "tipo_documentao_xml_diploma": "Documento Identidade",
     "tipo_documentao_xml_diploma_opcoes_disponiveis": "Documento Identidade | Prova Conclusão Ensino Médio | Prova Colação | Comprovação Estágio Curricular | Certidão de Nascimento | Certidão de Casamento | Titulo Eleitor | Ato Naturalização | Outros",
     "exigncia_do": "Aluno",
@@ -33,8 +33,7 @@
     "tipo_upload_do_arquivo_opcoes_disponiveis": "Documento | Imagem | Todos",
     "extenses_do_arquivo": "TESTE QA {{timestamp}}",
     "identificador_ged": "1234567",
-    "categoria_ged": "OUTROS",
-    "categoria_ged_opcoes_disponiveis": "OUTROS"
+    "categoria_ged": "TESTE QA {{timestamp}}"
   },
   "inserir": {
     "acoes": [
@@ -72,8 +71,8 @@
       },
       {
         "tipo": "preencher",
-        "campo": "nnome",
-        "label": "nnome",
+        "campo": "nome",
+        "label": "Nome",
         "valor": "TESTE QA {{timestamp}}",
         "_id_atual": "form:nome",
         "localizadores": [
@@ -209,7 +208,7 @@
         "tipo": "selecionar",
         "campo": "categoria_ged",
         "label": "Categoria GED",
-        "valor": "OUTROS",
+        "valor": "TESTE QA {{timestamp}}",
         "_id_atual": "",
         "localizadores": [
           "select[name='form:j_idt233']"
@@ -253,8 +252,8 @@
       },
       {
         "tipo": "preencher",
-        "campo": "nnome",
-        "label": "nnome",
+        "campo": "nome",
+        "label": "Nome",
         "valor": "TESTE QA {{timestamp}}",
         "valor_alterar": "TESTE QA {{timestamp}}",
         "localizadores": [

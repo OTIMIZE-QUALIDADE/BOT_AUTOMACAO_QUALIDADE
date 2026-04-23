@@ -69,7 +69,7 @@ body { background: var(--bg); color: var(--tx); font-family: var(--sans); font-s
   z-index: 10;
 }
 .tb-logo { font-family: 'Syne', var(--sans); font-size: 15px; font-weight: 800; color: var(--tx); white-space: nowrap; }
-.tb-logo span { color: var(--green); }
+.tb-logo span { color: var(--purple); }
 .tb-sep  { width: 1px; height: 20px; background: var(--bd); flex-shrink: 0; }
 .tb-sub  { font-size: 11px; color: var(--tx2); font-family: var(--mono); white-space: nowrap; }
 .tb-spacer { flex: 1; }
@@ -381,9 +381,12 @@ body { background: var(--bg); color: var(--tx); font-family: var(--sans); font-s
       <div id="listaModulos"></div>
     </div>
 
-    <div class="panel-foot">
+    <div class="panel-foot" style="flex-direction:column;gap:6px;">
       <button class="btn btn-orange" style="width:100%;justify-content:center;" onclick="showScanTab()">
         🔍 Escanear Nova Tela
+      </button>
+      <button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center;color:var(--red);border-color:var(--red);opacity:.75;" onclick="limparTodosCenarios()">
+        🗑️ Limpar Cenários
       </button>
     </div>
   </div>
@@ -999,6 +1002,40 @@ async function excluirCenario(event, id, nome) {
   } catch(e) { toast('Erro ao excluir cenário.', 'err'); }
 }
 
+async function limparTodosCenarios() {
+  const lista = await fetch('/api/cenarios').then(r => r.json()).catch(() => []);
+  if (!lista.length) { toast('Nenhum cenário para limpar.', 'ok'); return; }
+  if (!confirm(`Excluir TODOS os ${lista.length} cenário(s)?\nEsta ação não pode ser desfeita.`)) return;
+
+  const falhas = [];
+  let ok = 0;
+  for (const c of lista) {
+    try {
+      const resp = await fetch(`/api/cenarios/${encodeURIComponent(c.id)}`, { method:'DELETE' });
+      const d = await resp.json();
+      if (d.ok) {
+        ok++;
+      } else {
+        falhas.push({ nome: c.descricao || c.id, motivo: d.erro || `HTTP ${resp.status}` });
+      }
+    } catch (e) {
+      falhas.push({ nome: c.descricao || c.id, motivo: e.message || 'Erro de rede' });
+    }
+  }
+
+  cenarioAtivo = null;
+  document.getElementById('semCenario').style.display = 'block';
+  document.getElementById('configPanel').style.display = 'none';
+  await carregarCenarios();
+
+  if (falhas.length === 0) {
+    toast(`${ok} cenário(s) removido(s).`, 'ok');
+  } else {
+    const linhas = falhas.map(f => `• ${f.nome}: ${f.motivo}`).join('\n');
+    alert(`${ok} removido(s) com sucesso.\n\nFalharam ${falhas.length}:\n${linhas}`);
+  }
+}
+
 function selecionarCenario(c) {
   cenarioAtivo = c;
   document.querySelectorAll('.cenario-item').forEach(el => el.classList.remove('on'));
@@ -1097,6 +1134,15 @@ function showScanTab() {
   if (url)  document.getElementById('scanSeiUrl').value  = url;
   if (user) document.getElementById('scanUsuario').value = user;
   if (pass) document.getElementById('scanSenha').value   = pass;
+
+  // Limpa resultado da escaneação anterior para não confundir com nova tela
+  document.getElementById('scanResultado').style.display = 'none';
+  document.getElementById('dadosTesteForm').innerHTML =
+    '<div class="empty" style="padding:10px">Aguardando escaneamento...</div>';
+  document.getElementById('selectCampoChave').innerHTML =
+    '<option value="">— Selecione —</option>';
+  cenarioGeradoId = null;
+
   centerTab('scan');
 }
 

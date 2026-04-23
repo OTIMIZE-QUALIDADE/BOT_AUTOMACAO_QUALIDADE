@@ -49,6 +49,8 @@ public class SpellChecker {
         errosCriticosConhecidos.put("codigo", "Código");      // sem acento
         errosCriticosConhecidos.put("situaco", "Situação");
         errosCriticosConhecidos.put("descricao", "Descrição"); // sem acento
+        errosCriticosConhecidos.put("adevertencia", "Advertência");  // 'e' extra antes do 'v'
+        errosCriticosConhecidos.put("adevertência", "Advertência");  // variante com acento
     }
 
     /**

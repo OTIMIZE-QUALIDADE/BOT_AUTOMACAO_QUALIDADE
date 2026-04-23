@@ -1,0 +1,202 @@
+{
+  "id" : "lUCAS TIPO",
+  "descricao" : "lUCAS TIPO",
+  "modulo" : "administrativo",
+  "tela" : "visaoAdministrativo/administrativo/tipoDocumentoForm.xhtml",
+  "_gerado_automaticamente" : true,
+  "operacoes_disponiveis" : [ "inserir", "alterar", "excluir", "ortografia" ],
+  "campo_chave" : "nome",
+  "dados_teste" : {
+    "tipo_documento_equivalente" : "TESTE QA {{timestamp}}",
+    "nome" : "TESTE QA {{timestamp}}",
+    "tipo_documentao_xml_diploma" : "Documento Identidade",
+    "tipo_documentao_xml_diploma_opcoes_disponiveis" : "Documento Identidade | Prova Conclusão Ensino Médio | Prova Colação | Comprovação Estágio Curricular | Certidão de Nascimento | Certidão de Casamento | Titulo Eleitor | Ato Naturalização | Outros",
+    "exigncia_do" : "Aluno",
+    "exigncia_do_opcoes_disponiveis" : "Aluno | Curso | Institucional",
+    "exigido_pela_escolaridade" : "Educação Infantil",
+    "exigido_pela_escolaridade_opcoes_disponiveis" : "Educação Infantil | Ensino Fundamental | Ensino Médio | Técnico/Profissionalizante | Extensão | Graduação | Especialização | Pós-graduação | Mestrado | Doutorado | Pós-Doutorado",
+    "sexo" : "Masculino",
+    "sexo_opcoes_disponiveis" : "Ambos | Masculino | Feminino | Não Binário",
+    "estado_cvil" : "Amasiado(a)",
+    "estado_cvil_opcoes_disponiveis" : "Amasiado(a) | Casado(a) | Desquitado(a) | Divorciado(a) | Separado(a) | Solteiro(a) | Todos | União Estável | Viúvo(a)",
+    "estrangeiro" : "Todos",
+    "estrangeiro_opcoes_disponiveis" : "Todos | Sim | Não",
+    "idade_mnima" : "TESTE QA {{timestamp}}",
+    "idade_mxima" : "TESTE QA {{timestamp}}",
+    "tipo_upload_do_arquivo" : "Documento",
+    "tipo_upload_do_arquivo_opcoes_disponiveis" : "Documento | Imagem | Todos",
+    "extenses_do_arquivo" : "TESTE QA {{timestamp}}",
+    "identificador_ged" : "1234567",
+    "categoria_ged" : "DOCUMENTOS PESSOAIS MATRICULA",
+    "categoria_ged_opcoes_disponiveis" : "DOCUMENTOS PESSOAIS MATRICULA | DOCUMENTOS ACADEMICOS | DOCUMENTACAO FINANCEIRA JURIDICA | BENEFICIOS BOLSAS | APROVEITAMENTO DE ESTUDOS"
+  },
+  "inserir" : {
+    "acoes" : [ {
+      "tipo" : "clicar",
+      "label" : "Novo",
+      "texto_botao" : "NOVO",
+      "localizadores" : [ "#form\\:novo\\:novo", "a[id*='novo']", "a.btn-info", "//a[contains(normalize-space(.), 'NOVO')]", "#form\\:btnNovo", "a[id*='btnNovo']" ]
+    }, {
+      "tipo" : "clicar_aba",
+      "label" : "Exigido Para Alunos Ingressantes de Transferência Entrada",
+      "valor" : "Exigido Para Alunos Ingressantes de Transferência Entrada",
+      "localizadores" : [ ]
+    }, {
+      "tipo" : "selecionar",
+      "campo" : "tipo_documento_equivalente",
+      "label" : "Tipo Documento Equivalente",
+      "valor" : "TESTE QA {{timestamp}}",
+      "_id_atual" : "formEquivalePor:tipoDocumentoEquivalente",
+      "localizadores" : [ "#formEquivalePor\\:tipoDocumentoEquivalente", "select[id='formEquivalePor:tipoDocumentoEquivalente']", "select[id*='tipoDocumentoEquivalente']", "select[name='formEquivalePor:tipoDocumentoEquivalente']" ]
+    }, {
+      "tipo" : "preencher",
+      "campo" : "nome",
+      "label" : "Nome",
+      "valor" : "TESTE QA {{timestamp}}",
+      "_id_atual" : "form:nome",
+      "localizadores" : [ "#form\\:nome", "input[id='form:nome']", "input[id*='nome']", "input[name='form:nome']" ]
+    }, {
+      "tipo" : "selecionar",
+      "campo" : "tipo_documentao_xml_diploma",
+      "label" : "Tipo Documentação XML Diploma",
+      "valor" : "Documento Identidade",
+      "_id_atual" : "form:tipoDocumentacao",
+      "localizadores" : [ "#form\\:tipoDocumentacao", "select[id='form:tipoDocumentacao']", "select[id*='tipoDocumentacao']", "select[name='form:tipoDocumentacao']" ]
+    }, {
+      "tipo" : "selecionar",
+      "campo" : "exigncia_do",
+      "label" : "Exigência do",
+      "valor" : "Aluno",
+      "_id_atual" : "form:tipoExigenciaDocumento",
+      "localizadores" : [ "#form\\:tipoExigenciaDocumento", "select[id='form:tipoExigenciaDocumento']", "select[id*='tipoExigenciaDocumento']", "select[name='form:tipoExigenciaDocumento']" ]
+    }, {
+      "tipo" : "selecionar",
+      "campo" : "exigido_pela_escolaridade",
+      "label" : "Exigido Pela Escolaridade",
+      "valor" : "Educação Infantil",
+      "_id_atual" : "",
+      "localizadores" : [ "select[name='form:j_idt196']" ]
+    }, {
+      "tipo" : "selecionar",
+      "campo" : "sexo",
+      "label" : "Sexo",
+      "valor" : "Masculino",
+      "_id_atual" : "",
+      "localizadores" : [ "select[name='form:j_idt200']" ]
+    }, {
+      "tipo" : "selecionar",
+      "campo" : "estado_cvil",
+      "label" : "Estado Cívil",
+      "valor" : "Amasiado(a)",
+      "_id_atual" : "",
+      "localizadores" : [ "select[name='form:j_idt204']" ]
+    }, {
+      "tipo" : "selecionar",
+      "campo" : "estrangeiro",
+      "label" : "Estrangeiro",
+      "valor" : "Todos",
+      "_id_atual" : "",
+      "localizadores" : [ "select[name='form:j_idt208']" ]
+    }, {
+      "tipo" : "preencher",
+      "campo" : "idade_mnima",
+      "label" : "Idade Mínima",
+      "valor" : "TESTE QA {{timestamp}}",
+      "_id_atual" : "",
+      "localizadores" : [ "input[name='form:j_idt212']" ]
+    }, {
+      "tipo" : "preencher",
+      "campo" : "idade_mxima",
+      "label" : "Idade Máxima",
+      "valor" : "TESTE QA {{timestamp}}",
+      "_id_atual" : "",
+      "localizadores" : [ "input[name='form:j_idt215']" ]
+    }, {
+      "tipo" : "selecionar",
+      "campo" : "tipo_upload_do_arquivo",
+      "label" : "Tipo Upload do Arquivo",
+      "valor" : "Documento",
+      "_id_atual" : "form:j_idt218",
+      "localizadores" : [ "#form\\:j_idt218", "select[id='form:j_idt218']", "select[id*='j_idt218']", "select[name='form:j_idt218']" ]
+    }, {
+      "tipo" : "preencher",
+      "campo" : "extenses_do_arquivo",
+      "label" : "Extensões do Arquivo",
+      "valor" : "TESTE QA {{timestamp}}",
+      "_id_atual" : "",
+      "localizadores" : [ "input[name='form:j_idt227']" ]
+    }, {
+      "tipo" : "preencher",
+      "campo" : "identificador_ged",
+      "label" : "Identificador GED",
+      "valor" : "1234567",
+      "_id_atual" : "form:identificadorGED",
+      "localizadores" : [ "#form\\:identificadorGED", "input[id='form:identificadorGED']", "input[id*='identificadorGED']", "input[name='form:identificadorGED']" ]
+    }, {
+      "tipo" : "selecionar",
+      "campo" : "categoria_ged",
+      "label" : "Categoria GED",
+      "valor" : "DOCUMENTOS PESSOAIS MATRICULA",
+      "_id_atual" : "",
+      "localizadores" : [ "select[name='form:j_idt233']" ]
+    }, {
+      "tipo" : "clicar",
+      "label" : "Salvar",
+      "texto_botao" : "GRAVAR",
+      "localizadores" : [ "#form\\:salvar\\:salvar", "a[id*='salvar']", "a.btn-dark", "//a[contains(normalize-space(.), 'GRAVAR')]", "a[id*='salvar']", "button[id*='salvar']", "a.btn-gravar", "a[class*='btn-gravar']", "#form\\:btnSalvar", "input[value='Salvar']", "input[value='GRAVAR']", "input[type='submit']" ]
+    } ],
+    "validacoes" : [ {
+      "tipo" : "mensagem_sucesso",
+      "valor" : "sucesso",
+      "_alternativas" : "Ajuste para a mensagem real de sucesso do SEI (ex: 'salvo com sucesso', 'cadastrado')"
+    } ]
+  },
+  "alterar" : {
+    "acoes" : [ {
+      "tipo" : "clicar_aba",
+      "label" : "Exigido Para Alunos Ingressantes de Transferência Entrada",
+      "valor" : "Exigido Para Alunos Ingressantes de Transferência Entrada",
+      "localizadores" : [ ]
+    }, {
+      "tipo" : "preencher",
+      "campo" : "nome",
+      "label" : "Nome",
+      "valor" : "EDITADO QA {{timestamp}}",
+      "valor_alterar" : "EDITADO QA {{timestamp}}",
+      "localizadores" : [ "#form\\:nome", "input[id='form:nome']", "input[id*='nome']", "input[name='form:nome']" ]
+    }, {
+      "tipo" : "preencher",
+      "campo" : "idade_mnima",
+      "label" : "Idade Mínima",
+      "valor" : "EDITADO QA {{timestamp}}",
+      "valor_alterar" : "EDITADO QA {{timestamp}}",
+      "localizadores" : [ "input[name='form:j_idt212']" ]
+    }, {
+      "tipo" : "clicar",
+      "label" : "Salvar",
+      "texto_botao" : "GRAVAR",
+      "localizadores" : [ "#form\\:salvar\\:salvar", "a[id*='salvar']", "a.btn-dark", "//a[contains(normalize-space(.), 'GRAVAR')]", "a[id*='salvar']", "button[id*='salvar']", "a.btn-gravar", "a[class*='btn-gravar']", "#form\\:btnSalvar", "input[value='Salvar']", "input[value='GRAVAR']", "input[type='submit']" ]
+    } ],
+    "validacoes" : [ {
+      "tipo" : "mensagem_sucesso",
+      "valor" : "sucesso"
+    } ]
+  },
+  "excluir" : {
+    "acoes" : [ {
+      "tipo" : "clicar",
+      "label" : "Excluir",
+      "texto_botao" : "EXCLUIR",
+      "localizadores" : [ "#form\\:excluir\\:excluir", "a[id*='excluir']", "a.btn-danger", "//a[contains(normalize-space(.), 'EXCLUIR')]", "#form\\:btnExcluir", "a[id*='btnExcluir']", "button[id*='excluir']", "input[value='Excluir']" ]
+    }, {
+      "tipo" : "confirmar_dialogo",
+      "label" : "Confirmar exclusão",
+      "localizadores" : [ ]
+    } ],
+    "validacoes" : [ {
+      "tipo" : "mensagem_sucesso",
+      "valor" : "excluído",
+      "_alternativas" : "Ajuste para a mensagem real do SEI"
+    } ]
+  }
+}

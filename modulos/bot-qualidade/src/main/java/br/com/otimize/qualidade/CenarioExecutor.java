@@ -372,6 +372,17 @@ public class CenarioExecutor {
             }
         }
 
+        // Se valorChaveInserido não foi definido pelo inserir (execução separada),
+        // deriva o valor a partir de dados_teste usando o mesmo runTimestamp
+        if ((valorChaveInserido == null || valorChaveInserido.isEmpty())
+                && cenario.getCampo_chave() != null && cenario.getDados_teste() != null) {
+            Object v = cenario.getDados_teste().get(cenario.getCampo_chave());
+            if (v != null) {
+                valorChaveInserido = substituir(v.toString(), cenario.getDados_teste());
+                System.out.println("[INFO] Valor chave derivado de dados_teste para " + tipoOp + ": " + valorChaveInserido);
+            }
+        }
+
         // Tentar buscar o registro inserido anteriormente
         if (valorChaveInserido != null && !valorChaveInserido.isEmpty()) {
             StepResult busca = buscarRegistroNaLista(valorChaveInserido);
@@ -380,7 +391,7 @@ public class CenarioExecutor {
                 System.out.println("[WARN] Não encontrou o registro na lista. Tentando prosseguir mesmo assim...");
             }
         } else {
-            System.out.println("[WARN] Nenhum valor chave disponível para busca. Execute inserir primeiro.");
+            System.out.println("[WARN] Nenhum valor chave disponível para busca. Configure campo_chave no cenário.");
         }
 
         // Executar ações do cenário

@@ -127,6 +127,10 @@ public class ScreenScanner {
         // Pequena espera extra: AJAX do formulário pode precisar de tempo adicional após modal
         esperarAjax(800);
 
+        // Se campos estão dentro de um iframe (padrão em alguns módulos do SEI),
+        // muda o contexto do WebDriver para esse frame antes de escanear
+        switchToFormIframe();
+
         String urlFormulario = driver.getCurrentUrl();
 
         // ── Detecta nomes das abas (strings, não WebElements — evita StaleElement) ─────
@@ -425,6 +429,48 @@ public class ScreenScanner {
     }
 
     /**
+     * Verifica se os campos do formulário estão dentro de um iframe.
+     * Se o documento principal não tiver campos interativos visíveis, tenta cada iframe
+     * e muda o contexto do WebDriver para o frame que contiver campos.
+     * Deve ser chamado ANTES de escanearCampos().
+     */
+    private void switchToFormIframe() {
+        try {
+            String sel = "input:not([type=hidden]):not([type=submit]):not([type=button]):not([readonly]):not([disabled])," +
+                         "select:not([disabled]),textarea:not([readonly]):not([disabled])";
+            long visible = driver.findElements(By.cssSelector(sel)).stream()
+                .filter(e -> { try { return e.isDisplayed(); } catch (Exception ex) { return false; } })
+                .count();
+            if (visible > 0) {
+                System.out.println("[SCAN] " + visible + " campo(s) visível(eis) no documento principal.");
+                return;
+            }
+
+            List<WebElement> iframes = driver.findElements(By.tagName("iframe"));
+            System.out.println("[SCAN] Nenhum campo no documento principal — verificando " + iframes.size() + " iframe(s)...");
+            for (int i = 0; i < iframes.size(); i++) {
+                try {
+                    driver.switchTo().frame(i);
+                    long frameVisible = driver.findElements(By.cssSelector(sel)).stream()
+                        .filter(e -> { try { return e.isDisplayed(); } catch (Exception ex) { return false; } })
+                        .count();
+                    if (frameVisible > 0) {
+                        System.out.println("[SCAN] Iframe " + (i + 1) + " tem " + frameVisible + " campo(s) — usando este frame para o scan.");
+                        return; // permanece no frame
+                    }
+                    driver.switchTo().defaultContent();
+                } catch (Exception e) {
+                    System.out.println("[SCAN] Iframe " + (i + 1) + " inacessível: " + e.getMessage());
+                    try { driver.switchTo().defaultContent(); } catch (Exception ignored) {}
+                }
+            }
+            System.out.println("[SCAN] Nenhum campo encontrado em iframes — mantendo contexto principal.");
+        } catch (Exception e) {
+            System.out.println("[SCAN] Erro ao verificar iframes: " + e.getMessage());
+        }
+    }
+
+    /**
      * Fecha o modal "Verificar Aluno/Candidato já Cadastrado" (panelCpf) se estiver aberto,
      * para não contaminar o escaneamento dos campos do formulário principal.
      */
@@ -598,9 +644,12 @@ public class ScreenScanner {
                 "    if(td&&(td.tagName==='TD'||td.tagName==='TH')){var prev=td.previousElementSibling;" +
                 "      if(prev){var ls=prev.querySelectorAll('label');if(ls.length)lbl=ls[0].innerText.trim().replace(/[*:]/g,'').trim();" +
                 "        if(!lbl){var t=prev.innerText.trim().replace(/[*:]/g,'').trim();if(t&&t.length<60)lbl=t;}}}}" +
-                // Estratégia 3: label dentro do mesmo td/li/div direto (não sobe mais)
-                "  if(!lbl){var p=el.parentElement;if(p){var ls=p.querySelectorAll('label');" +
-                "    for(var i=0;i<ls.length;i++){var t=ls[i].innerText.trim().replace(/[*:]/g,'').trim();if(t&&t.length<60){lbl=t;break;}}}}" +
+                // Estratégia 3: label no mesmo container — sobe até 3 níveis (Bootstrap/PrimeFaces colocam label fora do parent direto)
+                "  if(!lbl){var ac=el.parentElement;for(var lv=0;ac&&lv<3&&!lbl;lv++,ac=ac.parentElement){" +
+                "    if(['BODY','HTML','FORM'].indexOf(ac.tagName||'')>=0)break;" +
+                "    var ls=ac.querySelectorAll('label');" +
+                "    for(var i=0;i<ls.length&&!lbl;i++){var t=ls[i].innerText.trim().replace(/[*:]/g,'').trim();if(t&&t.length<60&&t.length>1)lbl=t;}" +
+                "  }}" +
                 // Estratégia 4: aria-label, title, placeholder
                 "  if(!lbl)lbl=(el.getAttribute('aria-label')||el.getAttribute('title')||'').replace(/[*:]/g,'').trim();" +
                 "  if(!lbl){var ph=(el.getAttribute('placeholder')||'').trim();" +
@@ -618,13 +667,14 @@ public class ScreenScanner {
                 "      if(sib2){var t2=(sib2.innerText||'').trim().replace(/[*:]/g,'').trim();" +
                 "        if(t2&&t2.length<60&&t2.length>1)lbl=t2;}" +
                 "      p2=p2.parentElement;d2++;}}" +
-                // Estratégia 6 (fallback final): derivar label do ID (camelCase → "Camel Case")
-                // ex: form:nomeDocumentacao → 'Nome Documentacao'  form:nivelEducacional → 'Nivel Educacional'
-                "  if(!lbl&&el.id){var pt=el.id;var ci=pt.lastIndexOf(':');" +
+                // Estratégia 6 (fallback final): derivar label do ID ou name
+                // Funciona com camelCase (nomeDocumentacao → "Nome Documentacao")
+                // E com ids minúsculos (descricao → "Descricao", situacao → "Situacao")
+                "  if(!lbl){var idn=el.id||el.name||'';if(idn){var pt=idn;var ci=pt.lastIndexOf(':');" +
                 "    if(ci>=0)pt=pt.substring(ci+1);" +
-                "    pt=pt.replace(/^(input|txt|fld|campo|field)/,'');" +
-                "    var sp=pt.replace(/([A-Z])/g,' $1').trim();" +
-                "    if(sp&&sp.length>=3&&sp!==pt)lbl=sp.charAt(0).toUpperCase()+sp.slice(1);}" +
+                "    pt=pt.replace(/^(input|txt|fld|campo|field)/,'').replace(/_/g,' ');" +
+                "    var sp=pt.replace(/([a-z])([A-Z])/g,'$1 $2').trim();" +
+                "    if(sp&&sp.length>=3&&!/^j_idt/.test(pt))lbl=sp.charAt(0).toUpperCase()+sp.slice(1);}}" +
                 "  return lbl.replace(/[*:]/g,'').trim();}" +
                 "var sel=\"input:not([type=hidden]):not([type=submit]):not([type=button]):not([type=checkbox]):not([type=radio]),select,textarea\";" +
                 "return Array.from(document.querySelectorAll(sel)).filter(function(el){" +

@@ -405,7 +405,7 @@ body { background: var(--bg); color: var(--tx); font-family: var(--sans); font-s
 
     <div class="center-tabs">
       <div class="c-tab on" id="ctabExec" onclick="centerTab('exec')">▶ Executar</div>
-      <div class="c-tab"    id="ctabScan" onclick="centerTab('scan')">🔍 Escanear</div>
+      <div class="c-tab"    id="ctabScan" onclick="showScanTab()">🔍 Escanear</div>
       <div class="c-tab"    id="ctabRel"  onclick="centerTab('rel')">📋 Relatórios</div>
       <div class="c-tab"    id="ctabDocs" onclick="centerTab('docs')">📖 Documentação</div>
     </div>
@@ -1212,10 +1212,21 @@ async function carregarFormDadosTeste(cenarioId) {
     campos.forEach(a => {
       const label = a.label || a.campo || '?';
       const campo = a.campo || '';
+      const opcoesBrut = (cenario.dados_teste || {})[campo + '_opcoes_disponiveis'] || '';
+      const opcoes = opcoesBrut ? opcoesBrut.split('|').map(o => o.trim()).filter(Boolean) : [];
+
+      const inputInserir = opcoes.length
+        ? `<select class="dt-inp dado-inserir" data-campo="${campo}">${opcoes.map(o => `<option value="${esc(o)}"${o===a.valor?' selected':''}>${esc(o)}</option>`).join('')}</select>`
+        : `<input type="text" class="dt-inp dado-inserir" data-campo="${campo}" value="${esc(a.valor||'')}" placeholder="valor para inserir" />`;
+
+      const inputAlterar = opcoes.length
+        ? `<select class="dt-inp dado-alterar" data-campo="${campo}"><option value="">— não altera —</option>${opcoes.map(o => `<option value="${esc(o)}"${o===a.valor_alterar?' selected':''}>${esc(o)}</option>`).join('')}</select>`
+        : `<input type="text" class="dt-inp dado-alterar" data-campo="${campo}" value="${esc(a.valor_alterar||'')}" placeholder="deixe em branco = não altera" />`;
+
       html += `<tr>
         <td><span style="font-weight:600">${label}</span>${a.tipo==='selecionar'?'<span class="sel-hint">▼ select</span>':''}</td>
-        <td><input type="text" class="dt-inp dado-inserir" data-campo="${campo}" value="${esc(a.valor||'')}" placeholder="valor para inserir" /></td>
-        <td><input type="text" class="dt-inp dado-alterar" data-campo="${campo}" value="${esc(a.valor_alterar||'')}" placeholder="deixe em branco = não altera" /></td>
+        <td>${inputInserir}</td>
+        <td>${inputAlterar}</td>
       </tr>`;
       const opt = document.createElement('option');
       opt.value = campo; opt.textContent = label;
@@ -1296,10 +1307,21 @@ async function carregarFormDadosTesteExec(cenarioId) {
     campos.forEach(a => {
       const label = a.label || a.campo || '?';
       const campo = a.campo || '';
+      const opcoesBrut = (cenario.dados_teste || {})[campo + '_opcoes_disponiveis'] || '';
+      const opcoes = opcoesBrut ? opcoesBrut.split('|').map(o => o.trim()).filter(Boolean) : [];
+
+      const inputInserir = opcoes.length
+        ? `<select class="dt-inp exec-inserir" data-campo="${campo}">${opcoes.map(o => `<option value="${esc(o)}"${o===a.valor?' selected':''}>${esc(o)}</option>`).join('')}</select>`
+        : `<input type="text" class="dt-inp exec-inserir" data-campo="${campo}" value="${esc(a.valor||'')}" placeholder="valor inserir" />`;
+
+      const inputAlterar = opcoes.length
+        ? `<select class="dt-inp exec-alterar" data-campo="${campo}"><option value="">— não altera —</option>${opcoes.map(o => `<option value="${esc(o)}"${o===a.valor_alterar?' selected':''}>${esc(o)}</option>`).join('')}</select>`
+        : `<input type="text" class="dt-inp exec-alterar" data-campo="${campo}" value="${esc(a.valor_alterar||'')}" placeholder="deixe em branco = mesmo" />`;
+
       html += `<tr>
-        <td style="font-weight:600">${label}</td>
-        <td><input type="text" class="dt-inp exec-inserir" data-campo="${campo}" value="${esc(a.valor||'')}" placeholder="valor inserir" /></td>
-        <td><input type="text" class="dt-inp exec-alterar" data-campo="${campo}" value="${esc(a.valor_alterar||'')}" placeholder="deixe em branco = mesmo" /></td>
+        <td style="font-weight:600">${label}${a.tipo==='selecionar'?'<span class="sel-hint">▼ select</span>':''}</td>
+        <td>${inputInserir}</td>
+        <td>${inputAlterar}</td>
       </tr>`;
       const opt = document.createElement('option');
       opt.value = campo; opt.textContent = label;

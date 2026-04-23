@@ -31,7 +31,15 @@ public class SpellChecker {
         // Termos em inglês aceitos no sistema
         "LOGIN", "EMAIL", "STATUS",
         // Abreviações comuns em formulários
-        "OBS", "NR", "NRO", "QTD", "DT"
+        "OBS", "NR", "NRO", "QTD", "DT",
+        // Programas e nomes próprios do MEC / educação superior
+        "PROUNI", "FIES", "ENADE", "REUNI", "SISU", "SISU", "INEP", "MEC",
+        "CAPES", "CNPQ", "FAPEMIG", "FAPERJ", "FAPESP",
+        // Termos acadêmicos e siglas comuns em formulários de IES
+        "IES", "PPG", "PPC", "TCC", "ENEM", "PIBIC", "PIBID",
+        "PNAES", "PARFOR", "UAB", "EAD", "PDI", "PIB",
+        // Nomes próprios de sistemas e entidades
+        "EBSERH", "HUAP", "HU", "SUS", "ANS", "CFM", "CRM"
     ));
 
     // Erros críticos conhecidos: mapeamento exato de palavra errada → sugestão correta

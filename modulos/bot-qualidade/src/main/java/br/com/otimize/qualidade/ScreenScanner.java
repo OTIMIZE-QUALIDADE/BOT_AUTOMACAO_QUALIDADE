@@ -676,7 +676,10 @@ public class ScreenScanner {
                 "    var sp=pt.replace(/([a-z])([A-Z])/g,'$1 $2').trim();" +
                 "    if(sp&&sp.length>=3&&!/^j_idt/.test(pt))lbl=sp.charAt(0).toUpperCase()+sp.slice(1);}}" +
                 "  return lbl.replace(/[*:]/g,'').trim();}" +
-                "var sel=\"input:not([type=hidden]):not([type=submit]):not([type=button]):not([type=checkbox]):not([type=radio]),select,textarea\";" +
+                // Inclui checkbox para capturar booleanos/toggles JSF (flipswitch)
+                // mas exclui checkboxes internos da UI do toggle (sem id útil ou com j_idt*)
+                "var sel=\"input:not([type=hidden]):not([type=submit]):not([type=button]):not([type=radio])," +
+                "select,textarea\";" +
                 "return Array.from(document.querySelectorAll(sel)).filter(function(el){" +
                 // getClientRects().length > 0 é mais confiável que offsetParent:
                 // funciona para position:fixed (offsetParent seria null mas campo está visível)
@@ -688,7 +691,7 @@ public class ScreenScanner {
                 "    var t=el.options[i].text.trim();" +
                 "    if(t&&t!=='Selecione'&&t.indexOf('--')!==0)opts.push(t);}" +
                 "  return{id:el.id||'',name:el.name||'',tag:el.tagName.toLowerCase()," +
-                "    type:el.getAttribute('type')||'',lbl:findLbl(el),opts:opts};});");
+                "    type:el.getAttribute('type')||'',lbl:findLbl(el),opts:opts,checked:el.checked||false};});");
         } catch (Exception e) {
             System.out.println("[SCAN] Erro JS scan: " + e.getMessage());
             return campos;
@@ -705,6 +708,7 @@ public class ScreenScanner {
                 String type    = (String) d.get("type");
                 String label   = (String) d.get("lbl");
                 List<String> opts = (List<String>) d.get("opts");
+                Boolean checkedVal = (Boolean) d.get("checked");
 
                 if (id == null) id = "";
                 if (name == null) name = "";
@@ -717,13 +721,19 @@ public class ScreenScanner {
                 if (label == null || label.isEmpty() || label.length() > 60) continue;
                 if (ehMascaraInput(label)) continue;
 
+                // Ignora checkboxes sem id útil (internos de componentes como flipswitch)
+                if ("checkbox".equals(type) && (id.isEmpty() || id.startsWith("j_idt"))) continue;
+
                 CampoDetectado campo = new CampoDetectado();
                 campo.label = label;
                 campo.id = id;
                 campo.name = name;
-                campo.tipo = "select".equals(tagName) ? "selecionar" : "preencher";
+                campo.tipo = "select".equals(tagName) ? "selecionar"
+                           : "checkbox".equals(type)   ? "booleano"
+                           : "preencher";
                 campo.elementType = tagName;
                 campo.ehData = detectarCampoDataSimples(id, name, label, type);
+                if ("booleano".equals(campo.tipo)) campo.estadoInicial = Boolean.TRUE.equals(checkedVal);
 
                 campo.localizadores = new ArrayList<>();
                 if (!id.isEmpty()) {
@@ -907,6 +917,11 @@ public class ScreenScanner {
                 acao.put("valor", valor);                         // VALOR JÁ PREENCHIDO
                 if (c.ehData) acao.put("_tipo_campo", "data");   // hint para CenarioExecutor
                 if (c.id != null) acao.put("_id_atual", c.id);
+                // Booleano/toggle: marca condicional e registra estado inicial do scan
+                if ("booleano".equals(c.tipo)) {
+                    acao.put("condicional", true);
+                    acao.put("_estado_inicial", c.estadoInicial);
+                }
                 if (c.isCondicional()) {
                     acao.put("condicional", true);
                     acao.put("_visivel_quando", c.condicionalSelectLabel + " = " + c.condicionalSelectValor);
@@ -1017,6 +1032,9 @@ public class ScreenScanner {
      * Gera valor fictício inteligente com base no label/id do campo.
      */
     private String gerarValorTeste(CampoDetectado c) {
+        // Campos booleanos/toggle: retorna estado real capturado no scan
+        if ("booleano".equals(c.tipo)) return c.estadoInicial ? "true" : "false";
+
         String label = c.label.toLowerCase();
         String id = (c.id != null ? c.id : "").toLowerCase();
         String ref = label + "|" + id;
@@ -1198,6 +1216,8 @@ public class ScreenScanner {
         String condicionalSelectLabel;
         /** Valor do select que torna este campo visível */
         String condicionalSelectValor;
+        /** Estado inicial do checkbox capturado durante o scan (true = marcado) */
+        boolean estadoInicial = false;
 
         boolean isCondicional() { return condicionalSelectLabel != null; }
 

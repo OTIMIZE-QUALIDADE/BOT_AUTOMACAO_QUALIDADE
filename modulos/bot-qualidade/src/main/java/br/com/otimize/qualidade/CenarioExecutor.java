@@ -39,6 +39,9 @@ public class CenarioExecutor {
 
     // Valor do campo chave usado no inserir — reutilizado para buscar no alterar/excluir
     private String valorChaveInserido = null;
+    // Valor do campo chave ANTES de uma alteração — fallback para excluir quando o
+    // alterar renomeia o registro e o nome original é necessário para localizá-lo
+    private String valorChaveAntesDaAlteracao = null;
 
     // Timestamp fixo por execução do cenário — garante que {{timestamp}} seja idêntico
     // em todas as chamadas dentro do mesmo run (evita mismatch entre preenchimento e busca)
@@ -392,9 +395,34 @@ public class CenarioExecutor {
             }
         }
 
-        // Tentar buscar o registro inserido anteriormente
+        // Antes de executar o alterar: salva o nome atual como fallback para o excluir.
+        // Se o alterar renomear o registro, o excluir precisa encontrá-lo pelo nome novo
+        // (valorChaveInserido atualizado abaixo), mas se a busca falhar, tenta o nome original.
+        if ("alterar".equals(tipoOp)) {
+            valorChaveAntesDaAlteracao = valorChaveInserido;
+            System.out.println("[INFO] Valor chave pré-alteração salvo para fallback: " + valorChaveAntesDaAlteracao);
+        }
+
+        // Tentar buscar o registro inserido/editado anteriormente
         if (valorChaveInserido != null && !valorChaveInserido.isEmpty()) {
             StepResult busca = buscarRegistroNaLista(valorChaveInserido);
+
+            // Fallback para excluir: se a busca pelo nome atual falhou E temos um nome
+            // pré-alteração diferente, tenta localizar pelo nome original (pré-edição).
+            // Isso cobre o caso em que o alterar renomeou o registro mas valorChaveInserido
+            // não foi atualizado corretamente.
+            if (!busca.isPassou() && "excluir".equals(tipoOp)
+                    && valorChaveAntesDaAlteracao != null
+                    && !valorChaveAntesDaAlteracao.isEmpty()
+                    && !valorChaveAntesDaAlteracao.equals(valorChaveInserido)) {
+                System.out.println("[INFO] Busca por nome editado falhou. Tentando fallback com nome pré-edição: " + valorChaveAntesDaAlteracao);
+                StepResult buscaFallback = buscarRegistroNaLista(valorChaveAntesDaAlteracao);
+                if (buscaFallback.isPassou()) {
+                    buscaFallback.setMensagem(buscaFallback.getMensagem() + " (fallback: nome pré-edição)");
+                    busca = buscaFallback;
+                }
+            }
+
             if (!busca.isPassou() && "excluir".equals(tipoOp)) {
                 busca.setPassou(true);
                 busca.setMensagem("Registro já excluído ou inexistente — exclusão OK");
@@ -431,15 +459,21 @@ public class CenarioExecutor {
         }
 
         // Após alteração: atualiza a chave de busca para o novo valor editado,
-        // garantindo que excluir (e buscas futuras) usem o valor alterado
+        // garantindo que excluir (e buscas futuras) usem o valor alterado.
+        // Tenta valor_alterar primeiro; se nulo/vazio, usa valor como fallback —
+        // cobrindo cenários onde o campo_chave ação usa só "valor" sem "valor_alterar".
         if ("alterar".equals(tipoOp) && cenario.getCampo_chave() != null) {
             for (TestScenario.Acao acao : cfg.getAcoes()) {
-                if (cenario.getCampo_chave().equals(acao.getCampo())
-                        && acao.getValor_alterar() != null && !acao.getValor_alterar().isEmpty()) {
-                    String novoValorChave = substituir(acao.getValor_alterar(), cenario.getDados_teste());
-                    if (!novoValorChave.isEmpty()) {
-                        valorChaveInserido = novoValorChave;
-                        System.out.println("[INFO] Valor chave atualizado após alteração: " + valorChaveInserido);
+                if (cenario.getCampo_chave().equals(acao.getCampo())) {
+                    String candidato = (acao.getValor_alterar() != null && !acao.getValor_alterar().isEmpty())
+                        ? acao.getValor_alterar()
+                        : acao.getValor();
+                    if (candidato != null && !candidato.isEmpty()) {
+                        String novoValorChave = substituir(candidato, cenario.getDados_teste());
+                        if (!novoValorChave.isEmpty()) {
+                            valorChaveInserido = novoValorChave;
+                            System.out.println("[INFO] Valor chave atualizado após alteração: " + valorChaveInserido);
+                        }
                     }
                     break;
                 }
@@ -460,8 +494,16 @@ public class CenarioExecutor {
         StepResult result = new StepResult("ortografia", "Verificar ortografia na tela atual");
         long start = System.currentTimeMillis();
 
-        // Navega para o Form (não Cons) para ver todos os labels, incluindo booleanos/toggles
-        String urlForm = cenario.getTela();
+        // Navega para o Form (não Cons) para ver todos os labels, incluindo booleanos/toggles.
+        // Prioridade: tela_form (cenários escaneados), depois deriva Cons→Form, por último tela direta.
+        String urlForm = cenario.getTela_form();
+        if (urlForm == null || urlForm.isEmpty()) {
+            String tela = cenario.getTela();
+            if (tela != null && tela.contains("Cons.xhtml"))
+                urlForm = tela.replace("Cons.xhtml", "Form.xhtml");
+            else
+                urlForm = tela;
+        }
         if (urlForm != null && !urlForm.isEmpty()) {
             try {
                 driver.get(config.getSeiUrl() + urlForm);
@@ -1316,6 +1358,152 @@ public class CenarioExecutor {
                             result.setMensagem("Confirmação processada");
                         }
                     }
+                    break;
+                }
+
+                case "booleano": {
+                    // Localiza o checkbox pelo primeiro localizador que funcionar
+                    String boolId = null;
+                    WebElement boolCb = null;
+                    for (String loc : acao.getLocalizadores()) {
+                        try {
+                            List<WebElement> found = driver.findElements(By.cssSelector(loc));
+                            for (WebElement el : found) { if (el != null) { boolCb = el; break; } }
+                            if (boolCb != null) break;
+                        } catch (Exception ignored) {}
+                    }
+                    // Extrai o id do checkbox para encontrar o label[for] do flipswitch
+                    if (boolCb != null) {
+                        try { boolId = boolCb.getAttribute("id"); } catch (Exception ignored) {}
+                    }
+                    // Derivar id do localizador se o elemento não foi achado ainda
+                    if ((boolId == null || boolId.isEmpty()) && acao.getLocalizadores() != null) {
+                        for (String loc : acao.getLocalizadores()) {
+                            if (loc.startsWith("#")) { boolId = loc.substring(1).replace("\\:", ":").replace("\\.", "."); break; }
+                            if (loc.startsWith("input[id='")) { boolId = loc.replaceAll("^input\\[id='([^']+)'\\]$", "$1"); break; }
+                        }
+                    }
+                    // Tentativa By.id (não precisa de escape CSS)
+                    if (boolCb == null && boolId != null && !boolId.isEmpty()) {
+                        try { boolCb = driver.findElement(By.id(boolId)); } catch (Exception ignored) {}
+                    }
+                    if (boolCb == null) {
+                        if (acao.isCondicional()) {
+                            result.setPassou(true);
+                            result.setMensagem("Campo booleano '" + acao.getLabel() + "' não encontrado (condicional — ignorado)");
+                        } else {
+                            result.setPassou(false);
+                            result.setMensagem("Campo booleano '" + acao.getLabel() + "' não encontrado na tela");
+                            result.setScreenshotBase64(screenshot());
+                        }
+                        break;
+                    }
+                    // Para flipswitch JSF o checkbox é oculto — o elemento clicável é label[for=id]
+                    WebElement boolClicavel = null;
+                    if (boolId != null && !boolId.isEmpty()) {
+                        try {
+                            WebElement lbl = driver.findElement(By.cssSelector(
+                                "label[for='" + boolId.replace("'", "\\'") + "']"));
+                            if (lbl.isDisplayed()) boolClicavel = lbl;
+                        } catch (Exception ignored) {}
+                    }
+                    if (boolClicavel == null) {
+                        boolean visivel = false;
+                        try { visivel = boolCb.isDisplayed(); } catch (Exception ignored) {}
+                        if (!visivel) {
+                            if (acao.isCondicional()) {
+                                result.setPassou(true);
+                                result.setMensagem("Campo booleano '" + acao.getLabel() + "' não visível (condicional — ignorado)");
+                            } else {
+                                result.setPassou(false);
+                                result.setMensagem("Campo booleano '" + acao.getLabel() + "' não está visível na tela");
+                                result.setScreenshotBase64(screenshot());
+                            }
+                            break;
+                        }
+                        boolean habilitado = false;
+                        try { habilitado = boolCb.isEnabled(); } catch (Exception ignored) {}
+                        if (!habilitado) {
+                            result.setPassou(false);
+                            result.setMensagem("Campo booleano '" + acao.getLabel() + "' está desabilitado");
+                            break;
+                        }
+                        boolClicavel = boolCb;
+                    }
+                    // Estado inicial via JS (mais confiável que isSelected() para flipswitch)
+                    boolean boolInicial = false;
+                    try {
+                        Object chk = ((JavascriptExecutor) driver).executeScript("return arguments[0].checked;", boolCb);
+                        boolInicial = Boolean.TRUE.equals(chk);
+                    } catch (Exception e2) {
+                        try { boolInicial = boolCb.isSelected(); } catch (Exception ignored) {}
+                    }
+                    // Clica para alternar
+                    try {
+                        jsClick(boolClicavel);
+                    } catch (Exception e2) {
+                        result.setPassou(false);
+                        result.setMensagem("Campo booleano '" + acao.getLabel() + "' não é clicável: "
+                            + (e2.getMessage() != null ? e2.getMessage().split("\n")[0] : "erro"));
+                        result.setScreenshotBase64(screenshot());
+                        break;
+                    }
+                    // Aguarda re-render (flipswitch pode disparar AJAX no JSF)
+                    pausa(300);
+                    try {
+                        new WebDriverWait(driver, Duration.ofSeconds(3))
+                            .until(d2 -> "complete".equals(
+                                ((JavascriptExecutor) d2).executeScript("return document.readyState")));
+                    } catch (Exception ignored) {}
+                    // Re-localiza para evitar StaleElement após re-render
+                    WebElement boolCbAtual = null;
+                    if (boolId != null && !boolId.isEmpty()) {
+                        try { boolCbAtual = driver.findElement(By.id(boolId)); } catch (Exception ignored) {}
+                    }
+                    if (boolCbAtual == null) boolCbAtual = boolCb;
+                    // Lê estado após clique
+                    boolean boolApos = !boolInicial;
+                    try {
+                        Object chkApos = ((JavascriptExecutor) driver).executeScript("return arguments[0].checked;", boolCbAtual);
+                        boolApos = Boolean.TRUE.equals(chkApos);
+                    } catch (Exception e2) {
+                        try { boolApos = boolCbAtual.isSelected(); } catch (Exception ignored) {}
+                    }
+                    if (boolApos == boolInicial) {
+                        result.setPassou(false);
+                        result.setMensagem(String.format(
+                            "Campo booleano '%s' não alterou estado após clique (permanece %s)",
+                            acao.getLabel(), boolInicial ? "marcado" : "desmarcado"));
+                        result.setScreenshotBase64(screenshot());
+                        break;
+                    }
+                    // Reverte ao estado original para não impactar os próximos campos
+                    try {
+                        WebElement boolRevert = null;
+                        if (boolId != null && !boolId.isEmpty()) {
+                            try {
+                                WebElement lblRev = driver.findElement(By.cssSelector(
+                                    "label[for='" + boolId.replace("'", "\\'") + "']"));
+                                if (lblRev.isDisplayed()) boolRevert = lblRev;
+                            } catch (Exception ignored) {}
+                        }
+                        if (boolRevert == null) boolRevert = boolCbAtual;
+                        jsClick(boolRevert);
+                        pausa(200);
+                    } catch (Exception e2) {
+                        System.out.println("[WARN] Booleano '" + acao.getLabel() + "': falha ao reverter — "
+                            + (e2.getMessage() != null ? e2.getMessage().split("\n")[0] : "erro"));
+                    }
+                    result.setPassou(true);
+                    result.setMensagem(String.format(
+                        "Campo booleano '%s' — inicial: %s → após clique: %s → revertido. Interação OK.",
+                        acao.getLabel(),
+                        boolInicial ? "marcado" : "desmarcado",
+                        boolApos ? "marcado" : "desmarcado"));
+                    System.out.println(String.format("[PASS] Booleano '%s': %s → %s → revertido",
+                        acao.getLabel(),
+                        boolInicial ? "marcado" : "desmarcado",
+                        boolApos ? "marcado" : "desmarcado"));
                     break;
                 }
 
@@ -2209,9 +2397,16 @@ public class CenarioExecutor {
                 "document.querySelectorAll('.tituloCampos, .titulo-campo, .field-label, .control-label').forEach(function(el) {" +
                 "  if (el.tagName !== 'SCRIPT' && el.tagName !== 'STYLE') add(el.textContent);" +
                 "});" +
-                // Captura <label> que não são de flipswitch (evita labels de toggle sem texto real)
+                // Captura <label>: para flipswitch-label extrai só os text nodes diretos
+                // (evita incluir o texto ON/OFF dos spans filhos, mas captura o título do campo)
                 "document.querySelectorAll('label').forEach(function(el) {" +
-                "  if (!el.classList.contains('flipswitch-label')) add(el.textContent);" +
+                "  if (el.classList.contains('flipswitch-label')) {" +
+                "    var txt = '';" +
+                "    el.childNodes.forEach(function(n){if(n.nodeType===3)txt+=n.textContent;});" +
+                "    add(txt.trim());" +
+                "  } else {" +
+                "    add(el.textContent);" +
+                "  }" +
                 "});" +
                 // Captura spans e tds com texto curto (título de campo sem classe específica)
                 "document.querySelectorAll('span, td, th').forEach(function(el) {" +

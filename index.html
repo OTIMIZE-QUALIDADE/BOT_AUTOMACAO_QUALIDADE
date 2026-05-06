@@ -1135,7 +1135,13 @@ function showScanTab() {
   if (user) document.getElementById('scanUsuario').value = user;
   if (pass) document.getElementById('scanSenha').value   = pass;
 
-  // Limpa resultado da escaneação anterior para não confundir com nova tela
+  // Limpa campos e resultado da escaneação anterior para nova tela começar vazia
+  document.getElementById('scanTela').value      = '';
+  document.getElementById('scanId').value        = '';
+  document.getElementById('scanModulo').value    = '';
+  document.getElementById('scanDescricao').value = '';
+  document.getElementById('scanAbas').value      = '';
+
   document.getElementById('scanResultado').style.display = 'none';
   document.getElementById('dadosTesteForm').innerHTML =
     '<div class="empty" style="padding:10px">Aguardando escaneamento...</div>';

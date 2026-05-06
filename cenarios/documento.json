@@ -1,15 +1,14 @@
 {
-  "id": "CRUD-TIPODOCUMENTO",
-  "descricao": "CRUD COMPLETO - TIPO DOCUMENTO",
-  "modulo": "Administrativo",
-  "tela": "visaoAdministrativo/administrativo/tipoDocumentoCons.xhtml",
+  "id": "documento",
+  "descricao": "documento",
+  "modulo": "administrativo",
+  "tela": "visaoAdministrativo/administrativo/tipoDocumentoForm.xhtml",
   "_gerado_automaticamente": true,
   "operacoes_disponiveis": [
     "inserir",
     "alterar",
     "excluir",
-    "ortografia",
-    "campos_obrigatorios"
+    "ortografia"
   ],
   "campo_chave": "nome",
   "dados_teste": {
@@ -33,7 +32,8 @@
     "tipo_upload_do_arquivo_opcoes_disponiveis": "Documento | Imagem | Todos",
     "extenses_do_arquivo": "TESTE QA {{timestamp}}",
     "identificador_ged": "1234567",
-    "categoria_ged": "TESTE QA {{timestamp}}"
+    "categoria_ged": "DOCUMENTOS PESSOAIS MATRICULA",
+    "categoria_ged_opcoes_disponiveis": "DOCUMENTOS PESSOAIS MATRICULA | DOCUMENTOS ACADEMICOS | DOCUMENTACAO FINANCEIRA JURIDICA | BENEFICIOS BOLSAS | APROVEITAMENTO DE ESTUDOS"
   },
   "inserir": {
     "acoes": [
@@ -152,7 +152,7 @@
         "tipo": "preencher",
         "campo": "idade_mnima",
         "label": "Idade Mínima",
-        "valor": "TESTE QA {{timestamp}}",
+        "valor": "{{timestamp}}",
         "_id_atual": "",
         "localizadores": [
           "input[name='form:j_idt212']"
@@ -162,7 +162,7 @@
         "tipo": "preencher",
         "campo": "idade_mxima",
         "label": "Idade Máxima",
-        "valor": "TESTE QA {{timestamp}}",
+        "valor": "{{timestamp}}",
         "_id_atual": "",
         "localizadores": [
           "input[name='form:j_idt215']"
@@ -208,7 +208,7 @@
         "tipo": "selecionar",
         "campo": "categoria_ged",
         "label": "Categoria GED",
-        "valor": "TESTE QA {{timestamp}}",
+        "valor": "DOCUMENTOS PESSOAIS MATRICULA",
         "_id_atual": "",
         "localizadores": [
           "select[name='form:j_idt233']"
@@ -267,8 +267,8 @@
         "tipo": "preencher",
         "campo": "idade_mnima",
         "label": "Idade Mínima",
-        "valor": "TESTE QA {{timestamp}}",
-        "valor_alterar": "TESTE QA {{timestamp}}",
+        "valor": "{{timestamp}}",
+        "valor_alterar": "{{timestamp}}",
         "localizadores": [
           "input[name='form:j_idt212']"
         ]

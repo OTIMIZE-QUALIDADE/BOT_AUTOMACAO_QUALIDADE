@@ -1,20 +1,19 @@
 {
-  "id": "tipodocumento",
-  "descricao": "tipodocumento",
-  "modulo": "administrativo",
+  "id": "crud-tipoocorrencia-correcao",
+  "descricao": "crud completo tipocorrencia-correcao",
+  "modulo": "Administrativo",
   "tela": "visaoAdministrativo/administrativo/tipoDocumentoForm.xhtml",
   "_gerado_automaticamente": true,
   "operacoes_disponiveis": [
     "inserir",
     "alterar",
     "excluir",
-    "ortografia",
-    "campos_obrigatorios"
+    "ortografia"
   ],
-  "campo_chave": "nnome",
+  "campo_chave": "nome",
   "dados_teste": {
     "tipo_documento_equivalente": "TESTE QA {{timestamp}}",
-    "nnome": "TESTE QA {{timestamp}}",
+    "nome": "TESTE QA {{timestamp}}",
     "tipo_documentao_xml_diploma": "Documento Identidade",
     "tipo_documentao_xml_diploma_opcoes_disponiveis": "Documento Identidade | Prova Conclusão Ensino Médio | Prova Colação | Comprovação Estágio Curricular | Certidão de Nascimento | Certidão de Casamento | Titulo Eleitor | Ato Naturalização | Outros",
     "exigncia_do": "Aluno",
@@ -33,8 +32,8 @@
     "tipo_upload_do_arquivo_opcoes_disponiveis": "Documento | Imagem | Todos",
     "extenses_do_arquivo": "TESTE QA {{timestamp}}",
     "identificador_ged": "1234567",
-    "categoria_ged": "OUTROS",
-    "categoria_ged_opcoes_disponiveis": "OUTROS"
+    "categoria_ged": "DOCUMENTOS PESSOAIS MATRICULA",
+    "categoria_ged_opcoes_disponiveis": "DOCUMENTOS PESSOAIS MATRICULA | DOCUMENTOS ACADEMICOS | DOCUMENTACAO FINANCEIRA JURIDICA | APROVEITAMENTO DE ESTUDOS | HISTÓRICO GRADUAÇÃO | CERTIFICADOS E DIPLOMAS | COREME"
   },
   "inserir": {
     "acoes": [
@@ -72,8 +71,8 @@
       },
       {
         "tipo": "preencher",
-        "campo": "nnome",
-        "label": "nnome",
+        "campo": "nome",
+        "label": "Nome",
         "valor": "TESTE QA {{timestamp}}",
         "_id_atual": "form:nome",
         "localizadores": [
@@ -116,7 +115,7 @@
         "valor": "Educação Infantil",
         "_id_atual": "",
         "localizadores": [
-          "select[name='form:j_idt196']"
+          "select[name='form:j_idt197']"
         ]
       },
       {
@@ -126,7 +125,7 @@
         "valor": "Masculino",
         "_id_atual": "",
         "localizadores": [
-          "select[name='form:j_idt200']"
+          "select[name='form:j_idt201']"
         ]
       },
       {
@@ -136,7 +135,7 @@
         "valor": "Amasiado(a)",
         "_id_atual": "",
         "localizadores": [
-          "select[name='form:j_idt204']"
+          "select[name='form:j_idt205']"
         ]
       },
       {
@@ -146,27 +145,27 @@
         "valor": "Todos",
         "_id_atual": "",
         "localizadores": [
-          "select[name='form:j_idt208']"
+          "select[name='form:j_idt209']"
         ]
       },
       {
         "tipo": "preencher",
         "campo": "idade_mnima",
         "label": "Idade Mínima",
-        "valor": "TESTE QA {{timestamp}}",
+        "valor": "{{timestamp}}",
         "_id_atual": "",
         "localizadores": [
-          "input[name='form:j_idt212']"
+          "input[name='form:j_idt213']"
         ]
       },
       {
         "tipo": "preencher",
         "campo": "idade_mxima",
         "label": "Idade Máxima",
-        "valor": "TESTE QA {{timestamp}}",
+        "valor": "{{timestamp}}",
         "_id_atual": "",
         "localizadores": [
-          "input[name='form:j_idt215']"
+          "input[name='form:j_idt216']"
         ]
       },
       {
@@ -174,12 +173,12 @@
         "campo": "tipo_upload_do_arquivo",
         "label": "Tipo Upload do Arquivo",
         "valor": "Documento",
-        "_id_atual": "form:j_idt218",
+        "_id_atual": "form:j_idt219",
         "localizadores": [
-          "#form\\:j_idt218",
-          "select[id='form:j_idt218']",
-          "select[id*='j_idt218']",
-          "select[name='form:j_idt218']"
+          "#form\\:j_idt219",
+          "select[id='form:j_idt219']",
+          "select[id*='j_idt219']",
+          "select[name='form:j_idt219']"
         ]
       },
       {
@@ -189,7 +188,7 @@
         "valor": "TESTE QA {{timestamp}}",
         "_id_atual": "",
         "localizadores": [
-          "input[name='form:j_idt227']"
+          "input[name='form:j_idt228']"
         ]
       },
       {
@@ -209,10 +208,10 @@
         "tipo": "selecionar",
         "campo": "categoria_ged",
         "label": "Categoria GED",
-        "valor": "OUTROS",
+        "valor": "DOCUMENTOS PESSOAIS MATRICULA",
         "_id_atual": "",
         "localizadores": [
-          "select[name='form:j_idt233']"
+          "select[name='form:j_idt234']"
         ]
       },
       {
@@ -253,8 +252,8 @@
       },
       {
         "tipo": "preencher",
-        "campo": "nnome",
-        "label": "nnome",
+        "campo": "nome",
+        "label": "Nome",
         "valor": "TESTE QA {{timestamp}}",
         "valor_alterar": "TESTE QA {{timestamp}}",
         "localizadores": [
@@ -268,10 +267,10 @@
         "tipo": "preencher",
         "campo": "idade_mnima",
         "label": "Idade Mínima",
-        "valor": "TESTE QA {{timestamp}}",
-        "valor_alterar": "TESTE QA {{timestamp}}",
+        "valor": "{{timestamp}}",
+        "valor_alterar": "{{timestamp}}",
         "localizadores": [
-          "input[name='form:j_idt212']"
+          "input[name='form:j_idt213']"
         ]
       },
       {

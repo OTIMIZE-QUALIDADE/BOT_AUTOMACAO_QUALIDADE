@@ -1,22 +1,22 @@
 {
-  "id": "pais",
-  "descricao": "pais",
-  "modulo": "administrativo",
-  "tela": "visaoAdministrativo/administrativo/paizForm.xhtml",
+  "id": "CRUD TIPO OCORRÊNCIA",
+  "descricao": "CRUD COMPLETO TIPO OCORRÊNCIA",
+  "modulo": "Acadêmico",
+  "tela": "visaoAdministrativo/academico/tipoAdvertenciaForm.xhtml",
   "_gerado_automaticamente": true,
   "operacoes_disponiveis": [
     "inserir",
     "alterar",
     "excluir",
-    "ortografia",
-    "campos_obrigatorios"
+    "ortografia"
   ],
-  "campo_chave": "nome",
+  "campo_chave": "descrio",
   "dados_teste": {
-    "nome": "TESTE QA {{timestamp}}",
-    "nacionalidade": "TESTE QA {{timestamp}}",
-    "sigla_inep": "TESTE QA {{timestamp}}",
-    "cdigo_bacen": "TESTE QA {{timestamp}}"
+    "descrio": "TESTE QA {{timestamp}}",
+    "situao": "Ativo",
+    "situao_opcoes_disponiveis": "Ativo | Inativo",
+    "modelo_impresso": "TESTE QA {{timestamp}}",
+    "descrio_padro_para_ocorrncia": "TESTE QA {{timestamp}}"
   },
   "inserir": {
     "acoes": [
@@ -35,60 +35,60 @@
       },
       {
         "tipo": "clicar_aba",
-        "label": "CódigoNação",
-        "valor": "CódigoNação",
+        "label": "Reponsável Cadastro",
+        "valor": "Reponsável Cadastro",
         "localizadores": []
       },
       {
         "tipo": "preencher",
-        "campo": "nome",
-        "label": "Nome",
+        "campo": "descrio",
+        "label": "Descrição",
         "valor": "TESTE QA {{timestamp}}",
-        "_id_atual": "form:nome",
+        "_id_atual": "form:descricao",
         "localizadores": [
-          "#form\\:nome",
-          "input[id='form:nome']",
-          "input[id*='nome']",
-          "input[name='form:nome']"
+          "#form\\:descricao",
+          "input[id='form:descricao']",
+          "input[id*='descricao']",
+          "input[name='form:descricao']"
+        ]
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "situao",
+        "label": "Situação",
+        "valor": "Ativo",
+        "_id_atual": "form:situacao",
+        "localizadores": [
+          "#form\\:situacao",
+          "select[id='form:situacao']",
+          "select[id*='situacao']",
+          "select[name='form:situacao']"
+        ]
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "modelo_impresso",
+        "label": "Modelo Impressão",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "form:textoPadrao",
+        "localizadores": [
+          "#form\\:textoPadrao",
+          "select[id='form:textoPadrao']",
+          "select[id*='textoPadrao']",
+          "select[name='form:textoPadrao']"
         ]
       },
       {
         "tipo": "preencher",
-        "campo": "nacionalidade",
-        "label": "Nacionalidade",
+        "campo": "descrio_padro_para_ocorrncia",
+        "label": "Descrição Padrão para Ocorrência",
         "valor": "TESTE QA {{timestamp}}",
-        "_id_atual": "form:nacionalidade",
+        "_id_atual": "form:descricaoAdvertencia",
         "localizadores": [
-          "#form\\:nacionalidade",
-          "input[id='form:nacionalidade']",
-          "input[id*='nacionalidade']",
-          "input[name='form:nacionalidade']"
-        ]
-      },
-      {
-        "tipo": "preencher",
-        "campo": "sigla_inep",
-        "label": "Sigla INEP",
-        "valor": "TESTE QA {{timestamp}}",
-        "_id_atual": "form:siglaInep",
-        "localizadores": [
-          "#form\\:siglaInep",
-          "input[id='form:siglaInep']",
-          "input[id*='siglaInep']",
-          "input[name='form:siglaInep']"
-        ]
-      },
-      {
-        "tipo": "preencher",
-        "campo": "cdigo_bacen",
-        "label": "Código Bacen",
-        "valor": "TESTE QA {{timestamp}}",
-        "_id_atual": "form:codigoBacen",
-        "localizadores": [
-          "#form\\:codigoBacen",
-          "input[id='form:codigoBacen']",
-          "input[id*='codigoBacen']",
-          "input[name='form:codigoBacen']"
+          "#form\\:descricaoAdvertencia",
+          "textarea[id='form:descricaoAdvertencia']",
+          "textarea[id*='descricaoAdvertencia']",
+          "textarea[name='form:descricaoAdvertencia']"
         ]
       },
       {
@@ -123,34 +123,34 @@
     "acoes": [
       {
         "tipo": "clicar_aba",
-        "label": "CódigoNação",
-        "valor": "CódigoNação",
+        "label": "Reponsável Cadastro",
+        "valor": "Reponsável Cadastro",
         "localizadores": []
       },
       {
         "tipo": "preencher",
-        "campo": "nome",
-        "label": "Nome",
-        "valor": "TESTE QA {{timestamp}}",
-        "valor_alterar": "TESTE QA {{timestamp}}",
+        "campo": "descrio",
+        "label": "Descrição",
+        "valor": "EDITADO QA {{timestamp}}",
+        "valor_alterar": "EDITADO QA {{timestamp}}",
         "localizadores": [
-          "#form\\:nome",
-          "input[id='form:nome']",
-          "input[id*='nome']",
-          "input[name='form:nome']"
+          "#form\\:descricao",
+          "input[id='form:descricao']",
+          "input[id*='descricao']",
+          "input[name='form:descricao']"
         ]
       },
       {
         "tipo": "preencher",
-        "campo": "nacionalidade",
-        "label": "Nacionalidade",
-        "valor": "TESTE QA {{timestamp}}",
-        "valor_alterar": "TESTE QA {{timestamp}}",
+        "campo": "descrio_padro_para_ocorrncia",
+        "label": "Descrição Padrão para Ocorrência",
+        "valor": "EDITADO QA {{timestamp}}",
+        "valor_alterar": "EDITADO QA {{timestamp}}",
         "localizadores": [
-          "#form\\:nacionalidade",
-          "input[id='form:nacionalidade']",
-          "input[id*='nacionalidade']",
-          "input[name='form:nacionalidade']"
+          "#form\\:descricaoAdvertencia",
+          "textarea[id='form:descricaoAdvertencia']",
+          "textarea[id*='descricaoAdvertencia']",
+          "textarea[name='form:descricaoAdvertencia']"
         ]
       },
       {

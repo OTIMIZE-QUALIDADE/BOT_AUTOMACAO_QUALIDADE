@@ -127,6 +127,10 @@ public class ScreenScanner {
         // Pequena espera extra: AJAX do formulário pode precisar de tempo adicional após modal
         esperarAjax(800);
 
+        // Se campos estão dentro de um iframe (padrão em alguns módulos do SEI),
+        // muda o contexto do WebDriver para esse frame antes de escanear
+        switchToFormIframe();
+
         String urlFormulario = driver.getCurrentUrl();
 
         // ── Detecta nomes das abas (strings, não WebElements — evita StaleElement) ─────
@@ -425,6 +429,48 @@ public class ScreenScanner {
     }
 
     /**
+     * Verifica se os campos do formulário estão dentro de um iframe.
+     * Se o documento principal não tiver campos interativos visíveis, tenta cada iframe
+     * e muda o contexto do WebDriver para o frame que contiver campos.
+     * Deve ser chamado ANTES de escanearCampos().
+     */
+    private void switchToFormIframe() {
+        try {
+            String sel = "input:not([type=hidden]):not([type=submit]):not([type=button]):not([readonly]):not([disabled])," +
+                         "select:not([disabled]),textarea:not([readonly]):not([disabled])";
+            long visible = driver.findElements(By.cssSelector(sel)).stream()
+                .filter(e -> { try { return e.isDisplayed(); } catch (Exception ex) { return false; } })
+                .count();
+            if (visible > 0) {
+                System.out.println("[SCAN] " + visible + " campo(s) visível(eis) no documento principal.");
+                return;
+            }
+
+            List<WebElement> iframes = driver.findElements(By.tagName("iframe"));
+            System.out.println("[SCAN] Nenhum campo no documento principal — verificando " + iframes.size() + " iframe(s)...");
+            for (int i = 0; i < iframes.size(); i++) {
+                try {
+                    driver.switchTo().frame(i);
+                    long frameVisible = driver.findElements(By.cssSelector(sel)).stream()
+                        .filter(e -> { try { return e.isDisplayed(); } catch (Exception ex) { return false; } })
+                        .count();
+                    if (frameVisible > 0) {
+                        System.out.println("[SCAN] Iframe " + (i + 1) + " tem " + frameVisible + " campo(s) — usando este frame para o scan.");
+                        return; // permanece no frame
+                    }
+                    driver.switchTo().defaultContent();
+                } catch (Exception e) {
+                    System.out.println("[SCAN] Iframe " + (i + 1) + " inacessível: " + e.getMessage());
+                    try { driver.switchTo().defaultContent(); } catch (Exception ignored) {}
+                }
+            }
+            System.out.println("[SCAN] Nenhum campo encontrado em iframes — mantendo contexto principal.");
+        } catch (Exception e) {
+            System.out.println("[SCAN] Erro ao verificar iframes: " + e.getMessage());
+        }
+    }
+
+    /**
      * Fecha o modal "Verificar Aluno/Candidato já Cadastrado" (panelCpf) se estiver aberto,
      * para não contaminar o escaneamento dos campos do formulário principal.
      */
@@ -598,9 +644,12 @@ public class ScreenScanner {
                 "    if(td&&(td.tagName==='TD'||td.tagName==='TH')){var prev=td.previousElementSibling;" +
                 "      if(prev){var ls=prev.querySelectorAll('label');if(ls.length)lbl=ls[0].innerText.trim().replace(/[*:]/g,'').trim();" +
                 "        if(!lbl){var t=prev.innerText.trim().replace(/[*:]/g,'').trim();if(t&&t.length<60)lbl=t;}}}}" +
-                // Estratégia 3: label dentro do mesmo td/li/div direto (não sobe mais)
-                "  if(!lbl){var p=el.parentElement;if(p){var ls=p.querySelectorAll('label');" +
-                "    for(var i=0;i<ls.length;i++){var t=ls[i].innerText.trim().replace(/[*:]/g,'').trim();if(t&&t.length<60){lbl=t;break;}}}}" +
+                // Estratégia 3: label no mesmo container — sobe até 3 níveis (Bootstrap/PrimeFaces colocam label fora do parent direto)
+                "  if(!lbl){var ac=el.parentElement;for(var lv=0;ac&&lv<3&&!lbl;lv++,ac=ac.parentElement){" +
+                "    if(['BODY','HTML','FORM'].indexOf(ac.tagName||'')>=0)break;" +
+                "    var ls=ac.querySelectorAll('label');" +
+                "    for(var i=0;i<ls.length&&!lbl;i++){var t=ls[i].innerText.trim().replace(/[*:]/g,'').trim();if(t&&t.length<60&&t.length>1)lbl=t;}" +
+                "  }}" +
                 // Estratégia 4: aria-label, title, placeholder
                 "  if(!lbl)lbl=(el.getAttribute('aria-label')||el.getAttribute('title')||'').replace(/[*:]/g,'').trim();" +
                 "  if(!lbl){var ph=(el.getAttribute('placeholder')||'').trim();" +
@@ -618,15 +667,19 @@ public class ScreenScanner {
                 "      if(sib2){var t2=(sib2.innerText||'').trim().replace(/[*:]/g,'').trim();" +
                 "        if(t2&&t2.length<60&&t2.length>1)lbl=t2;}" +
                 "      p2=p2.parentElement;d2++;}}" +
-                // Estratégia 6 (fallback final): derivar label do ID (camelCase → "Camel Case")
-                // ex: form:nomeDocumentacao → 'Nome Documentacao'  form:nivelEducacional → 'Nivel Educacional'
-                "  if(!lbl&&el.id){var pt=el.id;var ci=pt.lastIndexOf(':');" +
+                // Estratégia 6 (fallback final): derivar label do ID ou name
+                // Funciona com camelCase (nomeDocumentacao → "Nome Documentacao")
+                // E com ids minúsculos (descricao → "Descricao", situacao → "Situacao")
+                "  if(!lbl){var idn=el.id||el.name||'';if(idn){var pt=idn;var ci=pt.lastIndexOf(':');" +
                 "    if(ci>=0)pt=pt.substring(ci+1);" +
-                "    pt=pt.replace(/^(input|txt|fld|campo|field)/,'');" +
-                "    var sp=pt.replace(/([A-Z])/g,' $1').trim();" +
-                "    if(sp&&sp.length>=3&&sp!==pt)lbl=sp.charAt(0).toUpperCase()+sp.slice(1);}" +
+                "    pt=pt.replace(/^(input|txt|fld|campo|field)/,'').replace(/_/g,' ');" +
+                "    var sp=pt.replace(/([a-z])([A-Z])/g,'$1 $2').trim();" +
+                "    if(sp&&sp.length>=3&&!/^j_idt/.test(pt))lbl=sp.charAt(0).toUpperCase()+sp.slice(1);}}" +
                 "  return lbl.replace(/[*:]/g,'').trim();}" +
-                "var sel=\"input:not([type=hidden]):not([type=submit]):not([type=button]):not([type=checkbox]):not([type=radio]),select,textarea\";" +
+                // Inclui checkbox para capturar booleanos/toggles JSF (flipswitch)
+                // mas exclui checkboxes internos da UI do toggle (sem id útil ou com j_idt*)
+                "var sel=\"input:not([type=hidden]):not([type=submit]):not([type=button]):not([type=radio])," +
+                "select,textarea\";" +
                 "return Array.from(document.querySelectorAll(sel)).filter(function(el){" +
                 // getClientRects().length > 0 é mais confiável que offsetParent:
                 // funciona para position:fixed (offsetParent seria null mas campo está visível)
@@ -638,7 +691,7 @@ public class ScreenScanner {
                 "    var t=el.options[i].text.trim();" +
                 "    if(t&&t!=='Selecione'&&t.indexOf('--')!==0)opts.push(t);}" +
                 "  return{id:el.id||'',name:el.name||'',tag:el.tagName.toLowerCase()," +
-                "    type:el.getAttribute('type')||'',lbl:findLbl(el),opts:opts};});");
+                "    type:el.getAttribute('type')||'',lbl:findLbl(el),opts:opts,checked:el.checked||false};});");
         } catch (Exception e) {
             System.out.println("[SCAN] Erro JS scan: " + e.getMessage());
             return campos;
@@ -655,6 +708,7 @@ public class ScreenScanner {
                 String type    = (String) d.get("type");
                 String label   = (String) d.get("lbl");
                 List<String> opts = (List<String>) d.get("opts");
+                Boolean checkedVal = (Boolean) d.get("checked");
 
                 if (id == null) id = "";
                 if (name == null) name = "";
@@ -667,13 +721,19 @@ public class ScreenScanner {
                 if (label == null || label.isEmpty() || label.length() > 60) continue;
                 if (ehMascaraInput(label)) continue;
 
+                // Ignora checkboxes sem id útil (internos de componentes como flipswitch)
+                if ("checkbox".equals(type) && (id.isEmpty() || id.startsWith("j_idt"))) continue;
+
                 CampoDetectado campo = new CampoDetectado();
                 campo.label = label;
                 campo.id = id;
                 campo.name = name;
-                campo.tipo = "select".equals(tagName) ? "selecionar" : "preencher";
+                campo.tipo = "select".equals(tagName) ? "selecionar"
+                           : "checkbox".equals(type)   ? "booleano"
+                           : "preencher";
                 campo.elementType = tagName;
                 campo.ehData = detectarCampoDataSimples(id, name, label, type);
+                if ("booleano".equals(campo.tipo)) campo.estadoInicial = Boolean.TRUE.equals(checkedVal);
 
                 campo.localizadores = new ArrayList<>();
                 if (!id.isEmpty()) {
@@ -857,6 +917,11 @@ public class ScreenScanner {
                 acao.put("valor", valor);                         // VALOR JÁ PREENCHIDO
                 if (c.ehData) acao.put("_tipo_campo", "data");   // hint para CenarioExecutor
                 if (c.id != null) acao.put("_id_atual", c.id);
+                // Booleano/toggle: marca condicional e registra estado inicial do scan
+                if ("booleano".equals(c.tipo)) {
+                    acao.put("condicional", true);
+                    acao.put("_estado_inicial", c.estadoInicial);
+                }
                 if (c.isCondicional()) {
                     acao.put("condicional", true);
                     acao.put("_visivel_quando", c.condicionalSelectLabel + " = " + c.condicionalSelectValor);
@@ -967,6 +1032,9 @@ public class ScreenScanner {
      * Gera valor fictício inteligente com base no label/id do campo.
      */
     private String gerarValorTeste(CampoDetectado c) {
+        // Campos booleanos/toggle: retorna estado real capturado no scan
+        if ("booleano".equals(c.tipo)) return c.estadoInicial ? "true" : "false";
+
         String label = c.label.toLowerCase();
         String id = (c.id != null ? c.id : "").toLowerCase();
         String ref = label + "|" + id;
@@ -1148,6 +1216,8 @@ public class ScreenScanner {
         String condicionalSelectLabel;
         /** Valor do select que torna este campo visível */
         String condicionalSelectValor;
+        /** Estado inicial do checkbox capturado durante o scan (true = marcado) */
+        boolean estadoInicial = false;
 
         boolean isCondicional() { return condicionalSelectLabel != null; }
 

@@ -1,0 +1,1083 @@
+{
+  "id": "curso",
+  "descricao": "curso",
+  "modulo": "academico",
+  "tela": "visaoAdministrativo/academico/cursoForm.xhtml",
+  "_gerado_automaticamente": true,
+  "operacoes_disponiveis": [
+    "inserir",
+    "alterar",
+    "excluir",
+    "ortografia"
+  ],
+  "campo_chave": "localizar_funcionario",
+  "dados_teste": {
+    "localizar_funcionario": "100,00",
+    "localizar_funcionario_opcoes_disponiveis": "Uni LS - CÂMPUS TAGUATINGA | LS ESCOLA TÉCNICA | PÓS Uni LS | Uni LS - EXTENSÃO SUPERIOR | Uni LS - EXTENSÃO TÉCNICO | Uni LS - CÂMPUS DE CEILÂNDIA | IEPT ESCOLA TÉCNICA | CENTRO BRASILEIRO DE EDUCAÇÃO | CENTRO DE EDUCACAO PROFISSIONAL | INSTITUTO DE EDUCACAO SUPERIOR E PROFISSIONALIZANTE DE BRASILIA LTDA",
+    "objetivos": "TESTE QA {{timestamp}}",
+    "descrio": "TESTE QA {{timestamp}}",
+    "pblico_alvo": "TESTE QA {{timestamp}}",
+    "perfil_egresso": "TESTE QA {{timestamp}}",
+    "tipo_de_ttulo_conferido_no_diploma": "Predefinido",
+    "tipo_de_ttulo_conferido_no_diploma_opcoes_disponiveis": "Predefinido | Personalizado",
+    "ttulo": "Técnico",
+    "ttulo_opcoes_disponiveis": "Técnico",
+    "titulao_a_ser_exibida_no_diploma_masc": "TESTE QA {{timestamp}}",
+    "titulao_a_ser_exibida_no_diploma_fem": "TESTE QA {{timestamp}}",
+    "titulao_do_formando_masc": "TESTE QA {{timestamp}}",
+    "titulao_do_formando_fem": "01/01/1990",
+    "critrio_de_avaliao_histrico": "TESTE QA {{timestamp}}",
+    "consulta_disciplina_plano_ensino": "Código",
+    "consulta_disciplina_plano_ensino_opcoes_disponiveis": "Código | Nome",
+    "valor_consulta_disciplina_plano_ensino": "100,00",
+    "j_idt1295": "TESTE QA {{timestamp}}",
+    "j_idt1298": "TESTE QA {{timestamp}}",
+    "j_idt1301": "TESTE QA {{timestamp}}",
+    "j_idt1304": "TESTE QA {{timestamp}}",
+    "j_idt1307": "TESTE QA {{timestamp}}",
+    "j_idt1310": "TESTE QA {{timestamp}}",
+    "j_idt1313": "TESTE QA {{timestamp}}",
+    "j_idt1315": "Artigo",
+    "j_idt1315_opcoes_disponiveis": "Artigo | Link | Livro | Monografia | Norma | Revista | Video",
+    "j_idt1318": "Básica",
+    "j_idt1318_opcoes_disponiveis": "Básica | Complementar",
+    "j_idt1322": "TESTE QA {{timestamp}}",
+    "j_idt1325": "TESTE QA {{timestamp}}",
+    "j_idt1328": "TESTE QA {{timestamp}}",
+    "j_idt1331": "TESTE QA {{timestamp}}",
+    "consulta": "Título",
+    "consulta_opcoes_disponiveis": "Título | Editora | Autor | Tombo | Assunto | Classificação | Tipo Catálogo | Cutter/PHA",
+    "ordenar_por": "Edição",
+    "ordenar_por_opcoes_disponiveis": "Edição | Título | Ano Publicação | Ordem Crescente | Ordem Decrescente",
+    "valor_consulta": "100,00",
+    "consulta_funcionario_resp_pre_inscricao": "Nome",
+    "consulta_funcionario_resp_pre_inscricao_opcoes_disponiveis": "Nome | Matrícula | CPF | Cargo | Departamento | Unidade de Ensino",
+    "valor_consulta_funcionario_resp_pre_inscricao": "100,00",
+    "limpar": "TESTE QA {{timestamp}}",
+    "consultar_dados": "100,00",
+    "consultar_dados_opcoes_disponiveis": "Nome | Matrícula | CPF | Cargo | Departamento | Unidade de Ensino",
+    "consulta_turma": "Identificador",
+    "consulta_turma_opcoes_disponiveis": "Identificador | Unidade Ensino | Turno",
+    "valor_consulta_turma": "100,00",
+    "tipo_documento": "CONTRATO - RESPONSÁVEL FINANCEIRO",
+    "tipo_documento_opcoes_disponiveis": "CONTRATO - RESPONSÁVEL FINANCEIRO | CPF Aluno | CPF Responsável | Certidão de Nascimento/Casamento | Certificado Curso Auxilia | Certificado Ensino Médio | Certificado de 2° grau | Comprovante Residência | Comprovante Votação | Currículo Acadêmico | Currículo Lattes | Cópia da Carteira de Identidade | Cópia do CPF | Cópia do Certificado de Reservista ou de Alistamento Militar | Cópia do Certificado e Histórico Escolar | Cópia do Comprovante de Residência | Cópia do Pis | Cópia do Título de Eleitor | Declaração Conclusão Ensino Médio | Declaração Conclusão da Graduação | Declaração Funcional | Declaração cursando EM | Diploma - Tec. Enfermagem / Bach Enfermagem | Diploma de Graduação | Documento Militar | Documentos Scanner | Fotos 3x4 | Guia de Transferência | Hist Tec. Enfermagem/ Hist. Bach Enfermagem\" | Histórico Curso Auxiliar | Histórico Ensino Fundamental | Histórico Ensino Médio | Histórico Escolar | Histórico de Graduação | RG Aluno | RG Responsável | SF | Tipo Sanguíneo / Fator RH | Título Eleitor | adasd | asas | sdf",
+    "turno": "MATUTINO",
+    "turno_opcoes_disponiveis": "DIURNO | EAD | Fim-de-Semana | Fim-de-Semana - Diurno | Fim-de-Semana - Madrugada | HORÁRIO BIBLIOTECA CEILÂNDIA | HORÁRIO BIBLIOTECA TAGUATINGA | Livre | MATUTINO | MATUTINO - 4T | MATUTINO - 5 TEMPOS | MATUTINO - ENFERMAGEM 4 ANOS | MATUTINO. | Matutino - Estagio | Matutino - Pronatec | NOTURNO | NOTURNO - 4T | NOTURNO - 5 T | NOTURNO - 5 TEMPOS | NOTURNO - ENFERMAGEM 4 ANOS | NOTURNO. | Noturno - Estagio | VESPERTINO - 5 TEMPOS | Vespertino | Vespertino - Estagio",
+    "nome_turno_considerado_censo": "Matutino",
+    "nome_turno_considerado_censo_opcoes_disponiveis": "Matutino | Vespertino | Noturno | Integral",
+    "limpar_filtro": "1",
+    "cadastro": "1",
+    "localizar_turma": "Ambos",
+    "localizar_turma_opcoes_disponiveis": "Ambos | Estágio | Geral",
+    "adicionar_material_do_curso": "TESTE QA {{timestamp}}",
+    "cdigo_contbil": "TESTE QA {{timestamp}}",
+    "nome_contbil": "TESTE QA {{timestamp}}",
+    "nvel_contbil": "TESTE QA {{timestamp}}",
+    "texto_de_declarao_de_ppi_preto_pardo_e_indgena": "TESTE QA {{timestamp}}",
+    "texto_de_declarao_sobre_bolsas_e_auxlios": "TESTE QA {{timestamp}}",
+    "texto_de_declarao_de_escolaridade_pblica": "TESTE QA {{timestamp}}",
+    "texto_de_confirmao_de_nova_matrcula": "2024001",
+    "url_declarao_de_normas_de_matrcula": "2024001"
+  },
+  "inserir": {
+    "acoes": [
+      {
+        "tipo": "clicar",
+        "label": "Novo",
+        "texto_botao": "NOVO",
+        "localizadores": [
+          "#form\\:novo\\:novo",
+          "a[id*='novo']",
+          "a.btn-info",
+          "//a[contains(normalize-space(.), 'NOVO')]",
+          "#form\\:btnNovo",
+          "a[id*='btnNovo']"
+        ]
+      },
+      {
+        "tipo": "clicar_aba",
+        "label": "Dados Básicos",
+        "valor": "Dados Básicos",
+        "localizadores": []
+      },
+      {
+        "tipo": "preencher",
+        "campo": "localizar_funcionario",
+        "label": "Localizar Funcionario",
+        "valor": "Uni LS - CÂMPUS TAGUATINGA",
+        "_id_atual": "form:nome",
+        "localizadores": [
+          "#form\\:nome",
+          "input[id='form:nome']",
+          "input[id*='nome']",
+          "input[name='form:nome']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "localizar_funcionario",
+        "label": "Localizar Funcionario",
+        "valor": "Uni LS - CÂMPUS TAGUATINGA",
+        "_id_atual": "form:abreviatura",
+        "localizadores": [
+          "#form\\:abreviatura",
+          "input[id='form:abreviatura']",
+          "input[id*='abreviatura']",
+          "input[name='form:abreviatura']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "localizar_funcionario",
+        "label": "Localizar Funcionario",
+        "valor": "Uni LS - CÂMPUS TAGUATINGA",
+        "_id_atual": "form:nomeDocumentacao",
+        "localizadores": [
+          "#form\\:nomeDocumentacao",
+          "input[id='form:nomeDocumentacao']",
+          "input[id*='nomeDocumentacao']",
+          "input[name='form:nomeDocumentacao']"
+        ]
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "localizar_funcionario",
+        "label": "Localizar Funcionario",
+        "valor": "Uni LS - CÂMPUS TAGUATINGA",
+        "_id_atual": "form:nivelEducacional",
+        "localizadores": [
+          "#form\\:nivelEducacional",
+          "select[id='form:nivelEducacional']",
+          "select[id*='nivelEducacional']",
+          "select[name='form:nivelEducacional']"
+        ]
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "localizar_funcionario",
+        "label": "Localizar Funcionario",
+        "valor": "Uni LS - CÂMPUS TAGUATINGA",
+        "_id_atual": "",
+        "localizadores": [
+          "select[name='form:j_idt83']"
+        ]
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "localizar_funcionario",
+        "label": "Localizar Funcionario",
+        "valor": "Uni LS - CÂMPUS TAGUATINGA",
+        "_id_atual": "form:areaConhecimento",
+        "localizadores": [
+          "#form\\:areaConhecimento",
+          "select[id='form:areaConhecimento']",
+          "select[id*='areaConhecimento']",
+          "select[name='form:areaConhecimento']"
+        ]
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "localizar_funcionario",
+        "label": "Localizar Funcionario",
+        "valor": "Uni LS - CÂMPUS TAGUATINGA",
+        "_id_atual": "form:configuracaoAcademico",
+        "localizadores": [
+          "#form\\:configuracaoAcademico",
+          "select[id='form:configuracaoAcademico']",
+          "select[id*='configuracaoAcademico']",
+          "select[name='form:configuracaoAcademico']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "localizar_funcionario",
+        "label": "Localizar Funcionario",
+        "valor": "Uni LS - CÂMPUS TAGUATINGA",
+        "_id_atual": "form:preposicaoNomeCurso",
+        "localizadores": [
+          "#form\\:preposicaoNomeCurso",
+          "input[id='form:preposicaoNomeCurso']",
+          "input[id*='preposicaoNomeCurso']",
+          "input[name='form:preposicaoNomeCurso']"
+        ]
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "localizar_funcionario",
+        "label": "Localizar Funcionario",
+        "valor": "Uni LS - CÂMPUS TAGUATINGA",
+        "_id_atual": "form:questionario",
+        "localizadores": [
+          "#form\\:questionario",
+          "select[id='form:questionario']",
+          "select[id*='questionario']",
+          "select[name='form:questionario']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "objetivos",
+        "label": "Objetivos",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "form:objetivos",
+        "localizadores": [
+          "#form\\:objetivos",
+          "textarea[id='form:objetivos']",
+          "textarea[id*='objetivos']",
+          "textarea[name='form:objetivos']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "descrio",
+        "label": "Descrição",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "form:descricao",
+        "localizadores": [
+          "#form\\:descricao",
+          "textarea[id='form:descricao']",
+          "textarea[id*='descricao']",
+          "textarea[name='form:descricao']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "pblico_alvo",
+        "label": "Público Alvo",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "form:publicoAlvo",
+        "localizadores": [
+          "#form\\:publicoAlvo",
+          "textarea[id='form:publicoAlvo']",
+          "textarea[id*='publicoAlvo']",
+          "textarea[name='form:publicoAlvo']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "perfil_egresso",
+        "label": "Perfil Egresso",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "form:perfilEgresso",
+        "localizadores": [
+          "#form\\:perfilEgresso",
+          "textarea[id='form:perfilEgresso']",
+          "textarea[id*='perfilEgresso']",
+          "textarea[name='form:perfilEgresso']"
+        ]
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "tipo_de_ttulo_conferido_no_diploma",
+        "label": "Tipo de Título Conferido no Diploma",
+        "valor": "Predefinido",
+        "_id_atual": "form:tipoTituloConferidoDiploma",
+        "localizadores": [
+          "#form\\:tipoTituloConferidoDiploma",
+          "select[id='form:tipoTituloConferidoDiploma']",
+          "select[id*='tipoTituloConferidoDiploma']",
+          "select[name='form:tipoTituloConferidoDiploma']"
+        ]
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "ttulo",
+        "label": "Título",
+        "valor": "Técnico",
+        "_id_atual": "form:titulo",
+        "localizadores": [
+          "#form\\:titulo",
+          "select[id='form:titulo']",
+          "select[id*='titulo']",
+          "select[name='form:titulo']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "titulao_a_ser_exibida_no_diploma_masc",
+        "label": "Titulação a ser exibida no Diploma (Masc.)",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "form:titulacaoMasculinoApresentarDiploma",
+        "localizadores": [
+          "#form\\:titulacaoMasculinoApresentarDiploma",
+          "input[id='form:titulacaoMasculinoApresentarDiploma']",
+          "input[id*='titulacaoMasculinoApresentarDiploma']",
+          "input[name='form:titulacaoMasculinoApresentarDiploma']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "titulao_a_ser_exibida_no_diploma_fem",
+        "label": "Titulação a ser exibida no Diploma (Fem.)",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "form:titulacaoFemininoApresentarDiploma",
+        "localizadores": [
+          "#form\\:titulacaoFemininoApresentarDiploma",
+          "input[id='form:titulacaoFemininoApresentarDiploma']",
+          "input[id*='titulacaoFemininoApresentarDiploma']",
+          "input[name='form:titulacaoFemininoApresentarDiploma']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "titulao_do_formando_masc",
+        "label": "Titulação do Formando (Masc.)",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "form:titulacaoDoFormando",
+        "localizadores": [
+          "#form\\:titulacaoDoFormando",
+          "input[id='form:titulacaoDoFormando']",
+          "input[id*='titulacaoDoFormando']",
+          "input[name='form:titulacaoDoFormando']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "titulao_do_formando_fem",
+        "label": "Titulação do Formando (Fem.)",
+        "valor": "01/01/1990",
+        "_id_atual": "form:titulacaoDoFormandoFeminino",
+        "localizadores": [
+          "#form\\:titulacaoDoFormandoFeminino",
+          "input[id='form:titulacaoDoFormandoFeminino']",
+          "input[id*='titulacaoDoFormandoFeminino']",
+          "input[name='form:titulacaoDoFormandoFeminino']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "titulao_do_formando_fem",
+        "label": "Titulação do Formando (Fem.)",
+        "valor": "01/01/1990",
+        "_tipo_campo": "data",
+        "_id_atual": "form:quantidadeDisciplinasOptativasExpedicaoDiploma",
+        "localizadores": [
+          "#form\\:quantidadeDisciplinasOptativasExpedicaoDiploma",
+          "input[id='form:quantidadeDisciplinasOptativasExpedicaoDiploma']",
+          "input[id*='quantidadeDisciplinasOptativasExpedicaoDiploma']",
+          "input[name='form:quantidadeDisciplinasOptativasExpedicaoDiploma']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "critrio_de_avaliao_histrico",
+        "label": "Critério de Avaliação - Histórico",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "form:criterioAvaliacaoHistorico",
+        "localizadores": [
+          "#form\\:criterioAvaliacaoHistorico",
+          "textarea[id='form:criterioAvaliacaoHistorico']",
+          "textarea[id*='criterioAvaliacaoHistorico']",
+          "textarea[name='form:criterioAvaliacaoHistorico']"
+        ]
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "consulta_disciplina_plano_ensino",
+        "label": "Consulta Disciplina Plano Ensino",
+        "valor": "Código",
+        "_id_atual": "formDisciplinaPlanoEnsino:consultaDisciplinaPlanoEnsino",
+        "localizadores": [
+          "#formDisciplinaPlanoEnsino\\:consultaDisciplinaPlanoEnsino",
+          "select[id='formDisciplinaPlanoEnsino:consultaDisciplinaPlanoEnsino']",
+          "select[id*='consultaDisciplinaPlanoEnsino']",
+          "select[name='formDisciplinaPlanoEnsino:consultaDisciplinaPlanoEnsino']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "valor_consulta_disciplina_plano_ensino",
+        "label": "Valor Consulta Disciplina Plano Ensino",
+        "valor": "100,00",
+        "_id_atual": "formDisciplinaPlanoEnsino:valorConsultaDisciplinaPlanoEnsino",
+        "localizadores": [
+          "#formDisciplinaPlanoEnsino\\:valorConsultaDisciplinaPlanoEnsino",
+          "input[id='formDisciplinaPlanoEnsino:valorConsultaDisciplinaPlanoEnsino']",
+          "input[id*='valorConsultaDisciplinaPlanoEnsino']",
+          "input[name='formDisciplinaPlanoEnsino:valorConsultaDisciplinaPlanoEnsino']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "j_idt1295",
+        "label": "J idt1295",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "",
+        "localizadores": [
+          "input[name='formAdicionarReferenciasBibliograficas:j_idt1295']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "j_idt1298",
+        "label": "J idt1298",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "",
+        "localizadores": [
+          "input[name='formAdicionarReferenciasBibliograficas:j_idt1298']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "j_idt1301",
+        "label": "J idt1301",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "",
+        "localizadores": [
+          "input[name='formAdicionarReferenciasBibliograficas:j_idt1301']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "j_idt1304",
+        "label": "J idt1304",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "",
+        "localizadores": [
+          "input[name='formAdicionarReferenciasBibliograficas:j_idt1304']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "j_idt1307",
+        "label": "J idt1307",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "",
+        "localizadores": [
+          "input[name='formAdicionarReferenciasBibliograficas:j_idt1307']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "j_idt1310",
+        "label": "J idt1310",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "",
+        "localizadores": [
+          "input[name='formAdicionarReferenciasBibliograficas:j_idt1310']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "j_idt1313",
+        "label": "J idt1313",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "",
+        "localizadores": [
+          "input[name='formAdicionarReferenciasBibliograficas:j_idt1313']"
+        ]
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "j_idt1315",
+        "label": "J idt1315",
+        "valor": "Artigo",
+        "_id_atual": "",
+        "localizadores": [
+          "select[name='formAdicionarReferenciasBibliograficas:j_idt1315']"
+        ]
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "j_idt1318",
+        "label": "J idt1318",
+        "valor": "Básica",
+        "_id_atual": "",
+        "localizadores": [
+          "select[name='formAdicionarReferenciasBibliograficas:j_idt1318']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "j_idt1322",
+        "label": "J idt1322",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "",
+        "localizadores": [
+          "input[name='formAdicionarReferenciasBibliograficas:j_idt1322']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "j_idt1325",
+        "label": "J idt1325",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "",
+        "localizadores": [
+          "input[name='formAdicionarReferenciasBibliograficas:j_idt1325']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "j_idt1328",
+        "label": "J idt1328",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "",
+        "localizadores": [
+          "input[name='formAdicionarReferenciasBibliograficas:j_idt1328']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "j_idt1331",
+        "label": "J idt1331",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "",
+        "localizadores": [
+          "textarea[name='formAdicionarReferenciasBibliograficas:j_idt1331']"
+        ]
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "consulta",
+        "label": "Consulta",
+        "valor": "Título",
+        "_id_atual": "formReferenciaCatalogo:consulta",
+        "localizadores": [
+          "#formReferenciaCatalogo\\:consulta",
+          "select[id='formReferenciaCatalogo:consulta']",
+          "select[id*='consulta']",
+          "select[name='formReferenciaCatalogo:consulta']"
+        ]
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "ordenar_por",
+        "label": "Ordenar Por",
+        "valor": "Edição",
+        "_id_atual": "formReferenciaCatalogo:ordenarPor",
+        "localizadores": [
+          "#formReferenciaCatalogo\\:ordenarPor",
+          "select[id='formReferenciaCatalogo:ordenarPor']",
+          "select[id*='ordenarPor']",
+          "select[name='formReferenciaCatalogo:ordenarPor']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "valor_consulta",
+        "label": "Valor Consulta",
+        "valor": "100,00",
+        "_id_atual": "formReferenciaCatalogo:valorConsulta",
+        "localizadores": [
+          "#formReferenciaCatalogo\\:valorConsulta",
+          "input[id='formReferenciaCatalogo:valorConsulta']",
+          "input[id*='valorConsulta']",
+          "input[name='formReferenciaCatalogo:valorConsulta']"
+        ]
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "consulta_funcionario_resp_pre_inscricao",
+        "label": "Consulta Funcionario Resp Pre Inscricao",
+        "valor": "Nome",
+        "_id_atual": "formFuncionarioRespPreInscricao:consultaFuncionarioRespPreInscricao",
+        "localizadores": [
+          "#formFuncionarioRespPreInscricao\\:consultaFuncionarioRespPreInscricao",
+          "select[id='formFuncionarioRespPreInscricao:consultaFuncionarioRespPreInscricao']",
+          "select[id*='consultaFuncionarioRespPreInscricao']",
+          "select[name='formFuncionarioRespPreInscricao:consultaFuncionarioRespPreInscricao']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "valor_consulta_funcionario_resp_pre_inscricao",
+        "label": "Valor Consulta Funcionario Resp Pre Inscricao",
+        "valor": "100,00",
+        "_id_atual": "formFuncionarioRespPreInscricao:valorConsultaFuncionarioRespPreInscricao",
+        "localizadores": [
+          "#formFuncionarioRespPreInscricao\\:valorConsultaFuncionarioRespPreInscricao",
+          "input[id='formFuncionarioRespPreInscricao:valorConsultaFuncionarioRespPreInscricao']",
+          "input[id*='valorConsultaFuncionarioRespPreInscricao']",
+          "input[name='formFuncionarioRespPreInscricao:valorConsultaFuncionarioRespPreInscricao']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "limpar",
+        "label": "Limpar",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "formUnidadeEnsinoCurso:resultadoConsultaUnidadeEnsinoCurso:j_idt1489",
+        "localizadores": [
+          "#formUnidadeEnsinoCurso\\:resultadoConsultaUnidadeEnsinoCurso\\:j_idt1489",
+          "input[id='formUnidadeEnsinoCurso:resultadoConsultaUnidadeEnsinoCurso:j_idt1489']",
+          "input[id*='j_idt1489']",
+          "input[name='formUnidadeEnsinoCurso:resultadoConsultaUnidadeEnsinoCurso:j_idt1489']"
+        ]
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "consultar_dados",
+        "label": "Consultar Dados",
+        "valor": "Nome",
+        "_id_atual": "formFuncionario:consultaFuncionario",
+        "localizadores": [
+          "#formFuncionario\\:consultaFuncionario",
+          "select[id='formFuncionario:consultaFuncionario']",
+          "select[id*='consultaFuncionario']",
+          "select[name='formFuncionario:consultaFuncionario']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "consultar_dados",
+        "label": "Consultar Dados",
+        "valor": "Nome",
+        "_id_atual": "formFuncionario:valorConsultaFuncionario",
+        "localizadores": [
+          "#formFuncionario\\:valorConsultaFuncionario",
+          "input[id='formFuncionario:valorConsultaFuncionario']",
+          "input[id*='valorConsultaFuncionario']",
+          "input[name='formFuncionario:valorConsultaFuncionario']"
+        ]
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "consulta_turma",
+        "label": "Consulta Turma",
+        "valor": "Identificador",
+        "_id_atual": "formTurma:consultaTurma",
+        "localizadores": [
+          "#formTurma\\:consultaTurma",
+          "select[id='formTurma:consultaTurma']",
+          "select[id*='consultaTurma']",
+          "select[name='formTurma:consultaTurma']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "valor_consulta_turma",
+        "label": "Valor Consulta Turma",
+        "valor": "100,00",
+        "_id_atual": "formTurma:valorConsultaTurma",
+        "localizadores": [
+          "#formTurma\\:valorConsultaTurma",
+          "input[id='formTurma:valorConsultaTurma']",
+          "input[id*='valorConsultaTurma']",
+          "input[name='formTurma:valorConsultaTurma']"
+        ]
+      },
+      {
+        "tipo": "clicar_aba",
+        "label": "Documentação",
+        "valor": "Documentação",
+        "localizadores": []
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "tipo_documento",
+        "label": "Tipo Documento",
+        "valor": "CONTRATO - RESPONSÁVEL FINANCEIRO",
+        "_id_atual": "form:DocumentacaoCurso_tipoDocumento",
+        "localizadores": [
+          "#form\\:DocumentacaoCurso_tipoDocumento",
+          "select[id='form:DocumentacaoCurso_tipoDocumento']",
+          "select[id*='DocumentacaoCurso_tipoDocumento']",
+          "select[name='form:DocumentacaoCurso_tipoDocumento']"
+        ]
+      },
+      {
+        "tipo": "clicar_aba",
+        "label": "Turnos",
+        "valor": "Turnos",
+        "localizadores": []
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "turno",
+        "label": "Turno",
+        "valor": "MATUTINO",
+        "_id_atual": "form:CursoTurno_turno",
+        "localizadores": [
+          "#form\\:CursoTurno_turno",
+          "select[id='form:CursoTurno_turno']",
+          "select[id*='CursoTurno_turno']",
+          "select[name='form:CursoTurno_turno']"
+        ]
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "nome_turno_considerado_censo",
+        "label": "Nome Turno Considerado Censo",
+        "valor": "Matutino",
+        "_id_atual": "form:CursoTurno_nomeTurnoCenso",
+        "localizadores": [
+          "#form\\:CursoTurno_nomeTurnoCenso",
+          "select[id='form:CursoTurno_nomeTurnoCenso']",
+          "select[id*='CursoTurno_nomeTurnoCenso']",
+          "select[name='form:CursoTurno_nomeTurnoCenso']"
+        ]
+      },
+      {
+        "tipo": "clicar_aba",
+        "label": "Matriz Curricular",
+        "valor": "Matriz Curricular",
+        "localizadores": []
+      },
+      {
+        "tipo": "preencher",
+        "campo": "limpar_filtro",
+        "label": "Limpar Filtro",
+        "valor": "1",
+        "_id_atual": "form:periodoLetivo1:j_idt552",
+        "localizadores": [
+          "#form\\:periodoLetivo1\\:j_idt552",
+          "input[id='form:periodoLetivo1:j_idt552']",
+          "input[id*='j_idt552']",
+          "input[name='form:periodoLetivo1:j_idt552']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "limpar_filtro",
+        "label": "Limpar Filtro",
+        "valor": "1",
+        "_id_atual": "form:periodoLetivo1:j_idt562",
+        "localizadores": [
+          "#form\\:periodoLetivo1\\:j_idt562",
+          "input[id='form:periodoLetivo1:j_idt562']",
+          "input[id*='j_idt562']",
+          "input[name='form:periodoLetivo1:j_idt562']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "cadastro",
+        "label": "CADASTRO",
+        "valor": "1",
+        "_id_atual": "form:periodoLetivo1:j_idt575",
+        "localizadores": [
+          "#form\\:periodoLetivo1\\:j_idt575",
+          "input[id='form:periodoLetivo1:j_idt575']",
+          "input[id*='j_idt575']",
+          "input[name='form:periodoLetivo1:j_idt575']"
+        ]
+      },
+      {
+        "tipo": "clicar_aba",
+        "label": "Coordenação",
+        "valor": "Coordenação",
+        "localizadores": []
+      },
+      {
+        "tipo": "preencher",
+        "campo": "localizar_funcionario",
+        "label": "Localizar Funcionario",
+        "valor": "Uni LS - CÂMPUS TAGUATINGA",
+        "_id_atual": "form:coordenadorMatricula",
+        "localizadores": [
+          "#form\\:coordenadorMatricula",
+          "input[id='form:coordenadorMatricula']",
+          "input[id*='coordenadorMatricula']",
+          "input[name='form:coordenadorMatricula']"
+        ]
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "localizar_funcionario",
+        "label": "Localizar Funcionario",
+        "valor": "Uni LS - CÂMPUS TAGUATINGA",
+        "_id_atual": "form:unidadeEnsino",
+        "localizadores": [
+          "#form\\:unidadeEnsino",
+          "select[id='form:unidadeEnsino']",
+          "select[id*='unidadeEnsino']",
+          "select[name='form:unidadeEnsino']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "localizar_turma",
+        "label": "Localizar Turma",
+        "valor": "Ambos",
+        "_id_atual": "form:coordenadorTurma",
+        "localizadores": [
+          "#form\\:coordenadorTurma",
+          "input[id='form:coordenadorTurma']",
+          "input[id*='coordenadorTurma']",
+          "input[name='form:coordenadorTurma']"
+        ]
+      },
+      {
+        "tipo": "selecionar",
+        "campo": "localizar_turma",
+        "label": "Localizar Turma",
+        "valor": "Ambos",
+        "_id_atual": "form:tipoCoordenadorCurso",
+        "localizadores": [
+          "#form\\:tipoCoordenadorCurso",
+          "select[id='form:tipoCoordenadorCurso']",
+          "select[id*='tipoCoordenadorCurso']",
+          "select[name='form:tipoCoordenadorCurso']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "localizar_funcionario",
+        "label": "Localizar Funcionario",
+        "valor": "Uni LS - CÂMPUS TAGUATINGA",
+        "_id_atual": "form:porcentagemComissao",
+        "localizadores": [
+          "#form\\:porcentagemComissao",
+          "input[id='form:porcentagemComissao']",
+          "input[id*='porcentagemComissao']",
+          "input[name='form:porcentagemComissao']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "localizar_funcionario",
+        "label": "Localizar Funcionario",
+        "valor": "Uni LS - CÂMPUS TAGUATINGA",
+        "_id_atual": "form:valorFixoComissao",
+        "localizadores": [
+          "#form\\:valorFixoComissao",
+          "input[id='form:valorFixoComissao']",
+          "input[id*='valorFixoComissao']",
+          "input[name='form:valorFixoComissao']"
+        ]
+      },
+      {
+        "tipo": "clicar_aba",
+        "label": "Material Curso",
+        "valor": "Material Curso",
+        "localizadores": []
+      },
+      {
+        "tipo": "preencher",
+        "campo": "adicionar_material_do_curso",
+        "label": "Adicionar Material do Curso",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "form:descricaoMaterial",
+        "localizadores": [
+          "#form\\:descricaoMaterial",
+          "input[id='form:descricaoMaterial']",
+          "input[id*='descricaoMaterial']",
+          "input[name='form:descricaoMaterial']"
+        ]
+      },
+      {
+        "tipo": "clicar_aba",
+        "label": "Dados Contábeis",
+        "valor": "Dados Contábeis",
+        "localizadores": []
+      },
+      {
+        "tipo": "preencher",
+        "campo": "cdigo_contbil",
+        "label": "Código Contábil",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "",
+        "localizadores": [
+          "input[name='form:j_idt793']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "nome_contbil",
+        "label": "Nome Contábil",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "",
+        "localizadores": [
+          "input[name='form:j_idt796']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "nvel_contbil",
+        "label": "Nível Contábil",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "",
+        "localizadores": [
+          "input[name='form:j_idt799']"
+        ]
+      },
+      {
+        "tipo": "clicar_aba",
+        "label": "Matricula Externa",
+        "valor": "Matricula Externa",
+        "localizadores": []
+      },
+      {
+        "tipo": "preencher",
+        "campo": "texto_de_declarao_de_ppi_preto_pardo_e_indgena",
+        "label": "Texto de Declaração de PPI (Preto Pardo e Indígena)",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "form:textoDeclaracaoPPI",
+        "localizadores": [
+          "#form\\:textoDeclaracaoPPI",
+          "textarea[id='form:textoDeclaracaoPPI']",
+          "textarea[id*='textoDeclaracaoPPI']",
+          "textarea[name='form:textoDeclaracaoPPI']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "texto_de_declarao_sobre_bolsas_e_auxlios",
+        "label": "Texto de Declaração sobre Bolsas e Auxílios",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "form:textoDeclaracaoBolsaAuxilio",
+        "localizadores": [
+          "#form\\:textoDeclaracaoBolsaAuxilio",
+          "textarea[id='form:textoDeclaracaoBolsaAuxilio']",
+          "textarea[id*='textoDeclaracaoBolsaAuxilio']",
+          "textarea[name='form:textoDeclaracaoBolsaAuxilio']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "texto_de_declarao_de_escolaridade_pblica",
+        "label": "Texto de Declaração de Escolaridade Pública",
+        "valor": "TESTE QA {{timestamp}}",
+        "_id_atual": "form:textoDeclaracaoEscolaPublica",
+        "localizadores": [
+          "#form\\:textoDeclaracaoEscolaPublica",
+          "textarea[id='form:textoDeclaracaoEscolaPublica']",
+          "textarea[id*='textoDeclaracaoEscolaPublica']",
+          "textarea[name='form:textoDeclaracaoEscolaPublica']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "texto_de_confirmao_de_nova_matrcula",
+        "label": "Texto de Confirmação de Nova Matrícula",
+        "valor": "2024001",
+        "_id_atual": "form:textoConfNovaMatricula",
+        "localizadores": [
+          "#form\\:textoConfNovaMatricula",
+          "textarea[id='form:textoConfNovaMatricula']",
+          "textarea[id*='textoConfNovaMatricula']",
+          "textarea[name='form:textoConfNovaMatricula']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "url_declarao_de_normas_de_matrcula",
+        "label": "Url Declaração de Normas de Matrícula",
+        "valor": "2024001",
+        "_id_atual": "",
+        "localizadores": [
+          "input[name='form:j_idt831']"
+        ]
+      },
+      {
+        "tipo": "clicar",
+        "label": "Salvar",
+        "texto_botao": "GRAVAR",
+        "localizadores": [
+          "#form\\:salvar\\:salvar",
+          "a[id*='salvar']",
+          "a.btn-dark",
+          "//a[contains(normalize-space(.), 'GRAVAR')]",
+          "a[id*='salvar']",
+          "button[id*='salvar']",
+          "a.btn-gravar",
+          "a[class*='btn-gravar']",
+          "#form\\:btnSalvar",
+          "input[value='Salvar']",
+          "input[value='GRAVAR']",
+          "input[type='submit']"
+        ]
+      }
+    ],
+    "validacoes": [
+      {
+        "tipo": "mensagem_sucesso",
+        "valor": "sucesso",
+        "_alternativas": "Ajuste para a mensagem real de sucesso do SEI (ex: 'salvo com sucesso', 'cadastrado')"
+      }
+    ]
+  },
+  "alterar": {
+    "acoes": [
+      {
+        "tipo": "clicar_aba",
+        "label": "Dados Básicos",
+        "valor": "Dados Básicos",
+        "localizadores": []
+      },
+      {
+        "tipo": "preencher",
+        "campo": "localizar_funcionario",
+        "label": "Localizar Funcionario",
+        "valor": "Uni LS - CÂMPUS TAGUATINGA",
+        "valor_alterar": "Uni LS - CÂMPUS TAGUATINGA",
+        "localizadores": [
+          "#form\\:nome",
+          "input[id='form:nome']",
+          "input[id*='nome']",
+          "input[name='form:nome']"
+        ]
+      },
+      {
+        "tipo": "preencher",
+        "campo": "localizar_funcionario",
+        "label": "Localizar Funcionario",
+        "valor": "Uni LS - CÂMPUS TAGUATINGA",
+        "valor_alterar": "Uni LS - CÂMPUS TAGUATINGA",
+        "localizadores": [
+          "#form\\:abreviatura",
+          "input[id='form:abreviatura']",
+          "input[id*='abreviatura']",
+          "input[name='form:abreviatura']"
+        ]
+      },
+      {
+        "tipo": "clicar",
+        "label": "Salvar",
+        "texto_botao": "GRAVAR",
+        "localizadores": [
+          "#form\\:salvar\\:salvar",
+          "a[id*='salvar']",
+          "a.btn-dark",
+          "//a[contains(normalize-space(.), 'GRAVAR')]",
+          "a[id*='salvar']",
+          "button[id*='salvar']",
+          "a.btn-gravar",
+          "a[class*='btn-gravar']",
+          "#form\\:btnSalvar",
+          "input[value='Salvar']",
+          "input[value='GRAVAR']",
+          "input[type='submit']"
+        ]
+      }
+    ],
+    "validacoes": [
+      {
+        "tipo": "mensagem_sucesso",
+        "valor": "sucesso"
+      }
+    ]
+  },
+  "excluir": {
+    "acoes": [
+      {
+        "tipo": "clicar",
+        "label": "Excluir",
+        "texto_botao": "EXCLUIR",
+        "localizadores": [
+          "#form\\:excluir\\:excluir",
+          "a[id*='excluir']",
+          "a.btn-danger",
+          "//a[contains(normalize-space(.), 'EXCLUIR')]",
+          "#form\\:btnExcluir",
+          "a[id*='btnExcluir']",
+          "button[id*='excluir']",
+          "input[value='Excluir']"
+        ]
+      },
+      {
+        "tipo": "confirmar_dialogo",
+        "label": "Confirmar exclusão",
+        "localizadores": []
+      }
+    ],
+    "validacoes": [
+      {
+        "tipo": "mensagem_sucesso",
+        "valor": "excluído",
+        "_alternativas": "Ajuste para a mensagem real do SEI"
+      }
+    ]
+  }
+}

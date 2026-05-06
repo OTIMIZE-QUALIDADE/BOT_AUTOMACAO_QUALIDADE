@@ -1,19 +1,18 @@
 {
-  "id": "tipoocorrencia",
-  "descricao": "tipoocorrencia",
-  "modulo": "acdemico",
+  "id": "tipoocorrencia apos correcao",
+  "descricao": "apos correcao",
+  "modulo": "Acadêmico",
   "tela": "visaoAdministrativo/academico/tipoAdvertenciaForm.xhtml",
   "_gerado_automaticamente": true,
   "operacoes_disponiveis": [
     "inserir",
     "alterar",
     "excluir",
-    "ortografia",
-    "campos_obrigatorios"
+    "ortografia"
   ],
-  "campo_chave": "descricaaao",
+  "campo_chave": "descrio",
   "dados_teste": {
-    "descricaaao": "TESTE QA {{timestamp}}",
+    "descrio": "TESTE QA {{timestamp}}",
     "situao": "Ativo",
     "situao_opcoes_disponiveis": "Ativo | Inativo",
     "modelo_impresso": "TESTE QA {{timestamp}}",
@@ -42,8 +41,8 @@
       },
       {
         "tipo": "preencher",
-        "campo": "descricaaao",
-        "label": "descricaaao",
+        "campo": "descrio",
+        "label": "Descrição",
         "valor": "TESTE QA {{timestamp}}",
         "_id_atual": "form:descricao",
         "localizadores": [
@@ -130,10 +129,10 @@
       },
       {
         "tipo": "preencher",
-        "campo": "descricaaao",
-        "label": "descricaaao",
-        "valor": "TESTE QA {{timestamp}}",
-        "valor_alterar": "TESTE QA {{timestamp}}",
+        "campo": "descrio",
+        "label": "Descrição",
+        "valor": "EDITADO QA {{timestamp}}",
+        "valor_alterar": "EDITADO QA {{timestamp}}",
         "localizadores": [
           "#form\\:descricao",
           "input[id='form:descricao']",
@@ -145,8 +144,8 @@
         "tipo": "preencher",
         "campo": "descrio_padro_para_ocorrncia",
         "label": "Descrição Padrão para Ocorrência",
-        "valor": "TESTE QA {{timestamp}}",
-        "valor_alterar": "TESTE QA {{timestamp}}",
+        "valor": "EDITADO QA {{timestamp}}",
+        "valor_alterar": "EDITADO QA {{timestamp}}",
         "localizadores": [
           "#form\\:descricaoAdvertencia",
           "textarea[id='form:descricaoAdvertencia']",

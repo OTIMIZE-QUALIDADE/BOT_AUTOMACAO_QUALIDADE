@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -n \"class SmartLocator\" modulos/bot-qualidade/src/main/java/br/com/otimize/qualidade/SmartLocator.java)",
+      "Bash(find . -name \"SmartLocator.java\")",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\kesia\\\\OneDrive\\\\Documentos\\\\GitHub\\\\BOT_AUTOMACAO_QUALIDADE\" -File | Where-Object { $_.Name -match \"mvn|maven|compile|build|run\" } | Select-Object Name)",
+      "Bash(python -c ' *)",
+      "Bash(python3 -c ' *)"
+    ]
+  }
+}
